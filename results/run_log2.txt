@@ -1,0 +1,7 @@
+[07:16:55] E3 external validation + LODO
+[07:18:41] E4 leakage audit
+[07:19:23] E5 calibration, recalibration, decision curves
+[07:19:24] E6 SHAP plausibility + ordinal odds ratios
+[07:20:12] E7 Saudi case-mix transport
+[07:20:13] E8 Ljubljana sensitivity ladder
+[07:21:40] done

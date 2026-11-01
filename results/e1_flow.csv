@@ -1,0 +1,25 @@
+cohort,step,n
+METABRIC,records,2509
+METABRIC,"invasive carcinoma, female (excl. stage 0 / sarcoma)",2484
+MSK-2018,samples,1918
+MSK-2018,patients,1756
+MSK-2018,female,1746
+MBCproject,patients,301
+MBCproject,"female, abstraction complete",256
+MBCproject,invasive carcinoma,254
+Sanger,patients,100
+Broad (MX/VN),patients,103
+Broad (MX/VN),invasive carcinoma,94
+BCCRC (TNBC),patients,65
+BCCRC (TNBC),carcinoma,64
+Duke MRI,patients,922
+Duke MRI,invasive carcinoma,921
+TCGA-BRCA,patients,1084
+TCGA-BRCA,female,1072
+BCCRC (TNBC),analysis set (grade 1-3 recorded),63
+Broad (MX/VN),analysis set (grade 1-3 recorded),59
+Duke MRI,analysis set (grade 1-3 recorded),637
+MBCproject,analysis set (grade 1-3 recorded),207
+METABRIC,analysis set (grade 1-3 recorded),2386
+MSK-2018,analysis set (grade 1-3 recorded),1573
+Sanger,analysis set (grade 1-3 recorded),100

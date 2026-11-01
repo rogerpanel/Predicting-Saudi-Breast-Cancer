@@ -1,0 +1,8 @@
+[07:22:14] E2 summary (per-repeat metrics + bootstrap CIs of repeat-averaged OOF predictions)
+[07:22:23] E3 external validation + LODO
+[07:24:07] E4 leakage audit
+[07:24:48] E5 calibration, recalibration, decision curves
+[07:24:49] E6 SHAP plausibility + ordinal odds ratios
+[07:25:37] E7 Saudi case-mix transport
+[07:25:37] E8 Ljubljana sensitivity ladder
+[07:27:09] done

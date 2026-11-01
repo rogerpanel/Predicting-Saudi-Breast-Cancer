@@ -1,0 +1,18 @@
+{
+  "stages": [
+    "e2opt"
+  ],
+  "seconds": 46,
+  "seed": 20261017,
+  "versions": {
+    "numpy": "2.5.3",
+    "pandas": "3.0.5",
+    "sklearn": "1.9.1",
+    "xgboost": "3.4.1",
+    "lightgbm": "4.7.0",
+    "shap": "0.54.1",
+    "scipy": "1.18.1",
+    "statsmodels": "0.15.0",
+    "imblearn": "0.14.2"
+  }
+}
