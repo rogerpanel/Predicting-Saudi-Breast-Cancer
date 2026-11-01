@@ -1,4 +1,4 @@
-# bc-grade-opendata
+# breast cancer-grade-opendata
 
 **Predicting breast cancer grade from routine clinical data: an open multi-cohort study with transport to Saudi patients**: reproducibility package
 (code, configuration, result files and manuscript sources).
