@@ -1,0 +1,82 @@
+# Published Saudi / Gulf comparison anchors (aggregate figures only; no data permission needed).
+# verified: table   = transcribed from the published paper's tables (page/table given per value)
+#           snippet = search-engine extract only; not used in any analysis
+# Fractions are of patients with the variable recorded. null = not reported / not seen.
+
+saudi_kussaibi2021:
+  citation: kussaibi2021saudi
+  doi: 10.15537/smj.2021.42.3.20200711        # PMID 33632908, PMCID PMC7989269
+  setting: "King Fahd University Hospital, Dammam (Eastern Province), 1998-2017; Saudi nationals"
+  label: "Dammam (Kussaibi 2021)"
+  verified: table        # re-read from the published PDF (Saudi Med J 42(3)), 2026-10-23
+  n: 286
+  median_age: 51         # Results, p. 294: "median age at diagnosis was 51 +/- 12 years in both groups"
+  grade_counts: {1: 25, 2: 156, 3: 105}         # Table 1, p. 295 (Saudis): 25 (8.7) / 156 (54.5) / 105 (36.7)
+  grade:   {1: 0.087, 2: 0.545, 3: 0.367}
+  histology: {idc: 0.913, ilc: 0.070, other: 0.017}   # Table 1: ductal 261, lobular 20, other 5 (of 286)
+  er_pos: 0.573          # Table 2, p. 296: +ve 161 (57.3), -ve 120 -> 161/281
+  pr_pos: 0.450          # Table 2: +ve 126 (45.0), -ve 154 -> 126/280
+  her2_pos: 0.253        # Table 2: +ve 69 (25.3), -ve 204 -> 69/273
+  age_le50: null         # not reported (Table 3 gives age only for HER2+ cases); primary analysis assumes 0.50
+  stage: {I: 0.126, II: 0.623, III: 0.246, IV: 0.005}   # Table 1: 26/129/51/1 of 207 staged
+
+saudi_durrani2025:
+  citation: durrani2025healthcare
+  doi: 10.3390/healthcare13070737             # Healthcare (Basel) 2025;13(7):737
+  setting: "Comprehensive Cancer Center, King Fahad Medical City, Riyadh, 2016-2019; 90.1% Saudi; 40% stage IV"
+  label: "Riyadh (Durrani 2025)"
+  verified: table        # re-read from the published PDF, Table 1 p. 6, 2026-10-23
+  n: 294
+  grade_counts: {1: 12, 2: 133, 3: 138}         # Table 1: I 12, II 133, III 138, unknown 11
+  grade:   {1: 0.042, 2: 0.470, 3: 0.488}       # of 283 graded
+  # Table 1 percentages do not match its counts for receptors; counts are used (denominator 294):
+  er_pos: 0.626          # 184/294 (printed 63.4%)
+  pr_pos: 0.541          # 159/294 (printed 54.3%)
+  her2_pos: 0.361        # 106/294 (printed 34.9%)
+  histology: {idc: 0.824, ilc: 0.071, other: 0.105}   # IDC 244, ILC 21, micropapillary 17 + other 14 (sum 296 as printed)
+  age_le50: 0.452        # <=40: 52, 41-50: 81 -> 133/294
+  stage: {I: 0.041, II: 0.269, III: 0.269, IV: 0.398}
+
+saudi_albasri2014:
+  citation: albasri2014madinah
+  setting: "King Fahad Hospital, Al-Madinah (Western Region), 2006-2013; Saudi patients; invasive ductal carcinoma only"
+  label: "Madinah (Albasri 2014)"
+  verified: table        # re-read from the published PDF (Saudi Med J 35(12)), p. 1491, 2026-10-23
+  n: 339
+  grade_counts: {1: 60, 2: 114, 3: 165}         # Results p. 1491 and Table 3 (IDC, n=339): 17.7 / 33.6 / 48.7 %
+  grade: {1: 0.177, 2: 0.336, 3: 0.487}
+  use: pooled_grade_only  # no receptor data -> not used for raking
+
+saudi_alamri2024:
+  citation: alamri2024najran
+  doi: 10.7759/cureus.67621                     # Cureus 16(8): e67621
+  setting: "King Khalid Hospital, Najran (Southern Region), 2018-2022; Saudi patients; biopsies"
+  label: "Najran (Alamri 2024)"
+  verified: table        # re-read from the published PDF, Table 4 p. 4 and Table 5 p. 5, 2026-10-23
+  n: 61
+  grade_counts: {1: 18, 2: 25, 3: 18}           # Table 4: grade I 18, II 25, III 18 (all 61 lesions)
+  grade: {1: 0.295, 2: 0.410, 3: 0.295}
+  # grade is reported for all 61 lesions, including 3 DCIS, 2 intraductal papillomas and 1 inflammatory
+  # fibroblastic tumour, so it does not follow the invasive-only grade rule -> sensitivity pooling only
+  er_pos_reported: 0.656 # Table 4: 40/61
+  pr_pos_reported: 0.541 # 33/61
+  her2_pos_reported: 0.344 # 21/61
+  age_lt50: 0.590        # Table 5: <50 y 36/61
+  use: pooled_sensitivity_only
+
+saudi_registry_basudan2022:
+  citation: basudan2022registry
+  source: "Saudi Cancer Registry, Saudi females, 2001-2017"
+  asr_2001: 11.8
+  asr_2017: 29.7
+  apc_overall: 5.13
+  median_age_2017: 51
+  share_female_cancers_2017: 0.309
+
+saudi_registry_scr2022:
+  citation: scr2022report
+  verified: snippet      # SCR Cancer Incidence Report 2022 (not used in analyses) (shc.gov.sa) -- re-check ASR before citing
+  cases_female_breast: 3280
+  share_female_cancers: 0.313
+  asr: 49.7
+  median_age: 52

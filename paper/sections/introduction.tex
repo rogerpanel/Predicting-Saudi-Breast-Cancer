@@ -1,0 +1,73 @@
+\section{Introduction}\label{sec:intro}
+
+Histological grade is one of the strongest prognostic factors in invasive breast cancer. The
+Nottingham (Elston--Ellis) system scores tubule formation, nuclear pleomorphism and mitotic count,
+and the resulting grade of 1, 2 or 3 predicts survival independently of tumour size and nodal
+status~\citep{elston1991grade,rakha2008nhg,rakha2010grade}. Grade has two practical weaknesses.
+First, it is only available after a pathologist has examined tissue. Second, it is only moderately
+reproducible: agreement between pathologists typically reaches a $\kappa$ of 0.5--0.7
+\citep{boiesen2000grading,longacre2006interobserver}, grading rates differ between laboratories in
+national data~\citep{vandooijeweert2020variation}, and the large intermediate group, grade~2, is
+prognostically mixed~\citep{sotiriou2006ggi,vandooijeweert2022grading}.
+
+Every patient record, however, already contains variables that are linked to grade: age, menopausal
+status, oestrogen receptor (ER), progesterone receptor (PR) and HER2 status, histological type,
+tumour size and nodal status. If these variables predict grade reliably, a simple model could fill
+gaps in registry and trial data, flag records whose assigned grade is unlikely given the rest of the
+record, and provide the baseline that image-based grading tools should beat. Recent work has moved
+straight to images, predicting grade from whole-slide images with deep learning and pathology
+foundation models~\citep{wang2022deepgrade,kim2025grade,chen2024uni} and from MRI
+radiomics~\citep{wang2022duke,wang2026dcemrigrade}. We found no study that measured, on open data
+from several countries, how much grade the routine record already carries.
+
+\paragraph{Problem statement}
+Three gaps prevent a reliable answer.
+\begin{enumerate}[leftmargin=*,itemsep=1pt,topsep=2pt]
+\item \emph{No transparent baseline.} Published grade-prediction studies are mostly single-centre,
+rarely validate their models externally, and seldom report calibration, which is the property that
+most often fails when a model moves to a new hospital~\citep{vancalster2019calibration,riley2024evalpart2}.
+It is also unclear whether flexible machine-learning methods add anything over regression, which
+systematic reviews suggest they usually do not~\citep{christodoulou2019lr}.
+\item \emph{Hidden leakage.} Public breast cancer datasets include variables that contain grade by
+construction, such as the Nottingham Prognostic Index and the three Nottingham component scores.
+Using them as predictors, or fitting preprocessing steps before splitting the data, lets information
+about the outcome reach the model and inflates performance~\citep{kapoor2023leakage,varoquaux2022failures,rosenblatt2024leakage}.
+The size of this inflation for grade prediction has not been measured.
+\item \emph{Unknown transport to Saudi patients.} Breast cancer is the most common cancer in Saudi
+women; its age-standardised incidence rose from 11.8 to 29.7 per 100{,}000 between 2001 and 2017,
+when it accounted for 30.9\% of female cancers~\citep{basudan2022registry}. Patients in Arab
+countries are younger and more often have hormone-receptor-negative or HER2-positive
+disease than patients in Western cohorts~\citep{najjar2010arab,chouchane2013arab,elkum2007young,altamimi2010saudi}.
+No grade-labelled patient-level dataset from the region is openly available, and local studies are
+based on single-centre records that cannot be
+shared~\citep{kussaibi2021saudi,durrani2025healthcare}. It is therefore unknown whether models built
+on Western data would give correct predictions for Saudi patients~\citep{debray2015framework,steingrimsson2023transport}.
+\end{enumerate}
+
+\paragraph{Research questions}
+We address these gaps with openly downloadable data only, so that every result can be reproduced by
+any reader. We ask:
+\textbf{RQ1}, how strongly is grade associated with each routine variable?
+\textbf{RQ2}, how well do models of increasing flexibility predict grade, within the development
+cohort and in independent cohorts from other countries, and are they well calibrated?
+\textbf{RQ3}, how much do common analytic shortcuts inflate apparent performance?
+\textbf{RQ4}, do MRI radiomic features add to the routine record?
+\textbf{RQ5}, what would Western-developed models predict for patients with a Saudi case-mix?
+
+\paragraph{Contributions}
+\begin{enumerate}[leftmargin=*,itemsep=1pt,topsep=2pt]
+\item A harmonised, checksummed data model of \NGradedTotal{} grade-labelled invasive breast cancers
+from \NGradedCohorts{} public cohorts on three continents, built with explicit rules that exclude
+in-situ disease, keep lobular and ductal carcinoma separate and allow one record per patient
+(Figure~\ref{fig:framework}).
+\item A model comparison that follows TRIPOD+AI~\citep{collins2024tripodai}: seven models from a
+prevalence baseline to gradient boosting, nested cross-validation, multiple imputation, paired
+comparisons with logistic regression, validation in five external cohorts and across datasets,
+calibration with model updating, and decision curves.
+\item To our knowledge, the first measurement, on the same data and models, of how much four common leakage
+shortcuts inflate apparent performance for grade prediction.
+\item A head-to-head test of 529 MRI radiomic features against the routine record in the same
+patients.
+\item A transport analysis that re-weights open cohorts to published Saudi hospital series and shows
+what Western-developed models would imply for Saudi patients.
+\end{enumerate}

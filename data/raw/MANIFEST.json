@@ -1,0 +1,19 @@
+{
+  "bccrc/data_clinical_patient.txt": "830090abb0ed3e6edfe55b9ede4ad832fe4e2d5330570489c2ceb9d3ad5b6fda",
+  "bccrc/data_clinical_sample.txt": "6e473f17550bea1af1dcdb673f030c0a36406427838ae6a4d968f505214908ba",
+  "broad/data_clinical_patient.txt": "bd68ae4de9cf45ae91891d8e31cdaa97256c1e07cddba5a8cbea105235c4c7ba",
+  "broad/data_clinical_sample.txt": "b9df6666e1865ad16486a4a7052b963e3ecc51ea0f8b8b5571de221c0bbf4305",
+  "duke/Clinical_and_Other_Features.xlsx": "8ef0945c9f7513acd2d9c6e8866d98f2234dd78443110d9496c24a82dbbc7e6f",
+  "duke/Imaging_Features.xlsx": "371e7aec937ccf7cff01bc3c66063ce22d9699d3d3f8c6ac0dcee6728826682d",
+  "ljubljana/breast-cancer.csv": "4523656d14e91168a602301490a8c89674a9b14384c29a5f652ba1a2bec844a9",
+  "mbcproject/data_clinical_patient.txt": "af713c02b3eb049c74f26edd783660dbbdc83f111fd7c6a594a7112436f46381",
+  "mbcproject/data_clinical_sample.txt": "55d6d96ac2bf44c8f020d4db9b475f3e97484dc3abaedfac09f4aa077dbf8c2c",
+  "metabric/data_clinical_patient.txt": "2a6bbadc6e4b2b07c0505559d438da959fc5c9aba55c7194abc394e2d6454995",
+  "metabric/data_clinical_sample.txt": "9a2291e065e2a0a5337b4eaeb09836e70b1bc3e1ed17714a013b53515697e6dc",
+  "msk2018/data_clinical_patient.txt": "b238d2847a12976c78eb5cd316a991f9b9512d689e2d264f50bf2503bd74a404",
+  "msk2018/data_clinical_sample.txt": "0bb8787fd290f1bb0f4cc7ec509e585ffad0903fc3f7f8b1c6bceb5cdbb4c84c",
+  "sanger/data_clinical_patient.txt": "d272a1b33fe3fb3e8efe514b956fc4103cdc6398050a645426fa267a47c641a3",
+  "sanger/data_clinical_sample.txt": "934d6096c52aef8561ee8a7771080652c80c7d8689187ef2b667f3a633e899ae",
+  "tcga/data_clinical_patient.txt": "13c939025794ce21905ccb3409865fa08506b2283b432f8e3a3022f60a4c7682",
+  "tcga/data_clinical_sample.txt": "e96e6e4895a6ddcdb31d508a9e8f5676ca78ce396d2f82cd111a286a17e75ca6"
+}

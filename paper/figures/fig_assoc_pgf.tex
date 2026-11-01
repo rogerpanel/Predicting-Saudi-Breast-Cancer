@@ -1,0 +1,11 @@
+\pgfplotstableread{\gdata{associations}}\tblassoc
+\begin{tikzpicture}
+\begin{axis}[bcbase, width=0.62\linewidth, height=6cm, xlabel={Effect size (bootstrap 95\% CI)},
+  ytick=data, yticklabels from table={\tblassoc}{label}, xmajorgrids, enlarge y limits=0.08,
+  legend columns=2, legend style={at={(0.5,1.02)}, anchor=south}]
+\addplot[dotci=cA] table[x=met, y expr=\thisrow{y}+0.15, x error minus=met_em, x error plus=met_ep] {\tblassoc};
+\addplot[dotci=cB] table[x=msk, y expr=\thisrow{y}-0.15, x error minus=msk_em, x error plus=msk_ep] {\tblassoc};
+\legend{METABRIC, MSK-2018}
+\draw[inkb] (axis cs:0,\pgfkeysvalueof{/pgfplots/ymin}) -- (axis cs:0,\pgfkeysvalueof{/pgfplots/ymax});
+\end{axis}
+\end{tikzpicture}

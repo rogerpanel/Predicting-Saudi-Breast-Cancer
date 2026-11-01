@@ -1,0 +1,14 @@
+\begin{tabular}{p{6.2cm}lrrr}
+\toprule
+Scenario & Model & Honest AUC & Leaky AUC & Inflation \\
+\midrule
+Target leakage: NPI as predictor (METABRIC) & Multinomial LR & 0.726 & 0.949 & +0.223 \\
+Target leakage: NPI as predictor (METABRIC) & XGBoost & 0.721 & 0.972 & +0.251 \\
+SMOTE + imputation before split (METABRIC) & k-NN & 0.652 & 0.806 & +0.154 \\
+SMOTE + imputation before split (METABRIC) & XGBoost & 0.669 & 0.850 & +0.181 \\
+Grade components as predictors (Sanger) & Multinomial LR & 0.696 & 0.962 & +0.266 \\
+Grade components as predictors (Duke MRI) & Multinomial LR & 0.698 & 0.995 & +0.297 \\
+Record-level split, 1718 records / 1573 patients (MSK) & k-NN & 0.544 & 0.579 & +0.035 \\
+Record-level split, 1718 records / 1573 patients (MSK) & Random forest & 0.621 & 0.653 & +0.033 \\
+\bottomrule
+\end{tabular}

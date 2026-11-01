@@ -1,0 +1,25 @@
+\begin{tikzpicture}
+\begin{groupplot}[group style={group size=2 by 1, horizontal sep=16mm}, bcbase, width=0.47\linewidth, height=6cm,
+  grid=major, title style={font=\sffamily\scriptsize\bfseries}]
+\nextgroupplot[title={Calibration of P(grade 3), multinomial LR}, xmin=0, xmax=1, ymin=0, ymax=1,
+  xlabel={Predicted probability}, ylabel={Observed proportion (LOWESS)},
+  legend style={at={(0.02,0.98)}, anchor=north west}]
+\addplot[cA, very thick] table[x=p, y=obs] {\gdata{cal_int}};
+\addplot[cB, very thick] table[x=p, y=obs] {\gdata{cal_msk}};
+\addplot[cB, very thick, dashed] table[x=p, y=obs] {\gdata{cal_mskrec}};
+\addplot[cD, very thick] table[x=p, y=obs] {\gdata{cal_duke}};
+\addplot[cD, very thick, dashed] table[x=p, y=obs] {\gdata{cal_dukerec}};
+\addplot[inkb, densely dotted, domain=0:1] {x};
+\legend{METABRIC (internal), MSK-2018, MSK-2018 updated, Duke MRI, Duke updated}
+\nextgroupplot[title={Decision curves for grade 3}, xmin=0.05, xmax=0.85, ymin=-0.05, ymax=0.7,
+  xlabel={Threshold probability}, ylabel={Net benefit}, legend style={at={(0.98,0.98)}, anchor=north east}]
+\addplot[cA, very thick] table[x=threshold, y=model_int] {\gdata{dca}};
+\addplot[cB, very thick] table[x=threshold, y=model_msk] {\gdata{dca}};
+\addplot[cD, very thick] table[x=threshold, y=model_duke] {\gdata{dca}};
+\addplot[cA, thin, dashed, forget plot] table[x=threshold, y=all_int] {\gdata{dca}};
+\addplot[cB, thin, dashed, forget plot] table[x=threshold, y=all_msk] {\gdata{dca}};
+\addplot[cD, thin, dashed, forget plot] table[x=threshold, y=all_duke] {\gdata{dca}};
+\addplot[inkb, thin, domain=0.05:0.85] {0};
+\legend{METABRIC model, MSK-2018 model, Duke model, Treat none}
+\end{groupplot}
+\end{tikzpicture}

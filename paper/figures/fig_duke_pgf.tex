@@ -1,0 +1,11 @@
+\pgfplotstableread{\gdata{duke_radiomics}}\tbldk
+\begin{tikzpicture}
+\begin{axis}[bcbase, width=0.55\linewidth, height=4.2cm, xmin=0.45, xmax=0.9, xmajorgrids,
+  ytick=data, yticklabels from table={\tbldk}{label}, enlarge y limits=0.25, xlabel={AUC (95\% CI), nested CV in Duke},
+  legend columns=2, legend style={at={(0.5,1.02)}, anchor=south}]
+\addplot[dotci=cA] table[x=macro, y expr=\thisrow{y}+0.12, x error minus=macro_em, x error plus=macro_ep] {\tbldk};
+\addplot[dotci=cD] table[x=g3, y expr=\thisrow{y}-0.12, x error minus=g3_em, x error plus=g3_ep] {\tbldk};
+\legend{Macro-AUC (3 grades), Grade 3 vs 1--2}
+\draw[inkb, dashed] (axis cs:0.5,-1) -- (axis cs:0.5,5);
+\end{axis}
+\end{tikzpicture}

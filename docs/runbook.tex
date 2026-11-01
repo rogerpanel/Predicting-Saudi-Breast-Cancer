@@ -1,0 +1,472 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+%
+\documentclass[
+  10pt,
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\ifPDFTeX\else
+  % xetex/luatex font selection
+  \setmainfont[]{DejaVu Serif}
+  \setmonofont[]{DejaVu Sans Mono}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=2cm]{geometry}
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={Code run-book for Claude Code: bc-grade-opendata v1.0},
+  colorlinks=true,
+  linkcolor={Maroon},
+  filecolor={Maroon},
+  citecolor={Blue},
+  urlcolor={Blue},
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Code run-book for Claude Code: bc-grade-opendata v1.0}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+{
+\hypersetup{linkcolor=}
+\setcounter{tocdepth}{3}
+\tableofcontents
+}
+\hypertarget{runbook-taking-v0.1-to-a-submission-ready-paper-with-claude-code}{%
+\section{RUNBOOK --- taking v0.1 to a submission-ready paper with Claude
+Code}\label{runbook-taking-v0.1-to-a-submission-ready-paper-with-claude-code}}
+
+This runbook is written for a Claude Code session (or a human analyst)
+working on a branch of this repository. Each step has an
+\textbf{action}, the \textbf{files it touches} and an \textbf{acceptance
+check}. Work top to bottom; tick the status table as you go and commit
+after each step.
+
+\begin{verbatim}
+git checkout -b submission-run
+claude                      # then: "Read CLAUDE.md and RUNBOOK.md, then do step R1"
+\end{verbatim}
+
+\hypertarget{status-at-v1.0-2026-10-18-submission-build}{%
+\subsection{Status at v1.0 (2026-10-18, submission
+build)}\label{status-at-v1.0-2026-10-18-submission-build}}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.5000}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.5000}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Area
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+State
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+R1 data + guards & Done --- checksums unchanged since v0.1; 12 tests
+pass (2 new: MI pooling, Duke in-situ/components) \\
+R2 exact reproduction of v0.1 & Done --- \texttt{numbers.tex} identical
+after a clean re-download and re-run \\
+R3 submission resampling (10 repeats, 2000 bootstraps) & Done \\
+R4 multiple imputation (m = 20, pooled predictions) + complete case &
+Done --- \texttt{e2mi}, \texttt{tab\_mi} \\
+R5 TabPFN & \textbf{Blocked} --- weights gated on Hugging Face (login +
+licence) and huggingface.co unreachable from the build sandbox; code
+path in \texttt{make\_model("tabpfn")}, runs automatically when weights
+are cached (\texttt{optional\_models\_status.json}) \\
+R6 more Saudi/Gulf anchors & Partly done --- Riyadh (Durrani 2025),
+Najran, Madinah added; pooled random-effects anchor; age-share
+sensitivity; bootstrap CIs. \textbf{All new values are
+abstract/snippet-level} (journal sites unreachable) → V2 must re-read
+the tables \\
+R7 sample size (Riley/Pate multinomial) & Done --- \texttt{e10};
+criteria \textbf{not met} for the G1-vs-G2 sub-model (reported in the
+paper) \\
+R8--R9 image-level arm (KAU-BCMD, CDD-CESM, BUSI) & \textbf{Blocked} ---
+Kaggle/TCIA hosts unreachable from the build sandbox \\
+R10 Duke-Breast-Cancer-MRI & Done --- clinical + 529 radiomics from a
+checksummed GitHub mirror of the TCIA XLSX; Duke is a second
+full-feature external cohort, in LODO, leakage audit (component scores)
+and E9 radiomics fusion \\
+R11 manuscript & Done --- rebuilt: Figure 1 framework (TikZ), pgfplots
+charts from \texttt{generated/data/*.csv}, new Introduction/Discussion,
+abstract \\
+V1 citations & Done via search-engine records (79 entries;
+\texttt{paper/refs\_annotated.bib} keeps provenance notes). One
+DOI-resolver pass from an unrestricted machine still advised \\
+V2 anchor double-read & \textbf{To do (human)} \\
+V3 TRIPOD+AI full checklist & Done (Supplementary Table) --- STROBE
+checklist still to add \\
+V4 independent clean re-run & To do on a second machine \\
+G1 GitHub + Zenodo & Package ready (\texttt{.github/workflows/ci.yml}
+added); repository creation + DOI = PI \\
+Author list, affiliations, funding, CRediT, PPI statement & To do PI \\
+\end{longtable}
+
+Headline v1.0 results (from \texttt{paper/generated/numbers.tex}):
+internal macro-AUC 0.72--0.73 for every learned model, XGBoost − LR =
++0.001 (95\% CI −0.006 to +0.008); external full-feature macro-AUC
+0.69--0.71 (MSK-2018), 0.70--0.72 (Duke); grade-3 calibration slope ≈ 1
+externally but intercept +0.99 (MSK) and −1.02 (Duke), both fixed by
+intercept update; MI vs single imputation Δ ≤ 0.003; leakage inflation
+up to +0.30; Duke radiomics fusion −0.045 vs clinical; Riley sample size
+not met (4477 required vs 2386); Saudi case-mix raises each cohort's
+grade-3 share by ≈ +10 points, and a METABRIC model would predict 59\%
+grade 3 vs 36.7\% published (Dammam).
+
+Headline v0.1 results (superseded; see
+\texttt{paper/generated/numbers.tex} for v1.0) (all from
+\texttt{paper/generated/numbers.tex}): internal macro-AUC ≈ 0.72 for
+every learned model (logistic regression = XGBoost); external macro-AUC
+0.64--0.80; grade-3 calibration slope ≈ 1.03 in MSK-2018 but intercept ≈
++0.99 (baseline-risk shift, fixed by intercept update); 7/7 SHAP
+directions plausible; leakage inflates macro-AUC by up to +0.27; Saudi
+re-weighting implies ≈ 61\% grade 3 vs 36.7\% published → Western models
+would over-predict grade 3 in Saudi patients.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{r0-environment-15-min}{%
+\subsection{R0 --- Environment (15 min)}\label{r0-environment-15-min}}
+
+\textbf{Action.}
+\texttt{python3\ -m\ venv\ .venv\ \&\&\ .\ .venv/bin/activate\ \&\&\ pip\ install\ -r\ requirements.txt}.
+LaTeX: TeX Live with \texttt{charter}, \texttt{natbib},
+\texttt{booktabs}, \texttt{enumitem}, \texttt{hyperref},
+\texttt{latexmk}. \textbf{Accept.}
+\texttt{python\ -c\ "import\ sklearn,\ xgboost,\ lightgbm,\ shap,\ statsmodels,\ imblearn"}
+succeeds.
+
+\hypertarget{r1-data-guards-5-min}{%
+\subsection{R1 --- Data + guards (5 min)}\label{r1-data-guards-5-min}}
+
+\textbf{Action.} \texttt{make\ data\ test}. \textbf{Accept.} 10 tests
+pass. \texttt{git\ diff\ data/raw/MANIFEST.json} is empty; if checksums
+changed, cBioPortal updated a study --- record the date in
+\texttt{paper/main.tex} Data availability and re-run everything.
+
+\hypertarget{r2-reproduce-v0.1-exactly-15-min-2-cores}{%
+\subsection{R2 --- Reproduce v0.1 exactly (≈ 15 min, 2
+cores)}\label{r2-reproduce-v0.1-exactly-15-min-2-cores}}
+
+\textbf{Action.} \texttt{make\ experiments\ report\ paper}.
+\textbf{Accept.} \texttt{git\ diff\ paper/generated/numbers.tex} shows
+no change (the seed is fixed). If numbers move by more than ±0.002,
+compare package versions with \texttt{results/run\_*.json} before
+continuing.
+
+\hypertarget{r3-submission-grade-resampling}{%
+\subsection{R3 --- Submission-grade
+resampling}\label{r3-submission-grade-resampling}}
+
+\textbf{Action.} In \texttt{configs/experiment.yaml} set
+\texttt{cv.repeats:\ 10}, \texttt{bootstrap:\ 2000}. Run
+\texttt{make\ experiments\ report\ paper}. \textbf{Accept.} Methods text
+updates automatically through \texttt{\textbackslash{}Repeats} /
+\texttt{\textbackslash{}Boot}. Macro-AUCs change \textless{} 0.005.
+
+\hypertarget{r4-multiple-imputation-with-pooled-predictions}{%
+\subsection{R4 --- Multiple imputation with pooled
+predictions}\label{r4-multiple-imputation-with-pooled-predictions}}
+
+\textbf{Why.} Reviewers will ask; v0.1 uses single in-fold
+chained-equation imputation. \textbf{Action.} In
+\texttt{src/bcgrade/models.py} add \texttt{MIClassifier(m=20)}: inside
+\texttt{fit}, create m
+\texttt{IterativeImputer(sample\_posterior=True,\ random\_state=seed+i)}
+→ scaler → clone(model) pipelines; in \texttt{predict\_proba}, average
+the m probability matrices. Register as model option \texttt{mi=True};
+add a test that predictions are averaged over m distinct imputations.
+Add an experiment \texttt{e2mi} for \texttt{mlr} and \texttt{xgb} only.
+Add a complete-case sensitivity row. Report in a new supplementary table
+\texttt{tab\_mi.tex}. \textbf{Accept.} MI and single-imputation
+macro-AUC differ by \textless{} 0.01, or the paper discusses why not.
+
+\hypertarget{r5-tabular-foundation-model-tabpfn}{%
+\subsection{R5 --- Tabular foundation model
+(TabPFN)}\label{r5-tabular-foundation-model-tabpfn}}
+
+\textbf{Action.} \texttt{pip\ install\ tabpfn} (needs model weights from
+Hugging Face on first use). Add \texttt{"tabpfn"} to
+\texttt{make\_model} (no tuning grid;
+\texttt{TabPFNClassifier(random\_state=seed)}), include in E2/E3/LODO.
+Cite \texttt{hollmann2025tabpfn} (already in refs.bib). \textbf{Accept.}
+Runs within the CV harness without leakage (it sits after impute/scale
+in the Pipeline). Expectation from v0.1: it will not beat regression by
+more than the CI; report either way.
+
+\hypertarget{r6-strengthen-the-saudi-gulf-anchor-key-for-sponsors}{%
+\subsection{R6 --- Strengthen the Saudi / Gulf anchor (key for
+sponsors)}\label{r6-strengthen-the-saudi-gulf-anchor-key-for-sponsors}}
+
+\textbf{Action.} 1. Find further published Saudi/Gulf
+clinicopathological series reporting grade, ER/PR/HER2, histology and
+age (Saudi Medical Journal, Annals of Saudi Medicine, J Clin Med,
+Cureus, BMC Cancer; KFSH\&RC Riyadh, KAMC Riyadh/Jeddah, KAUH Jeddah;
+also UAE, Kuwait, Oman, Qatar). Transcribe Table 1 counts into
+\texttt{configs/anchors.yaml} (one block per study, with page and table
+numbers). 2. Generalise \texttt{e7} to loop over all anchors and add a
+random-effects pooled Saudi grade distribution. 3. Add a ``joint''
+sensitivity: rake on ER × HER2 jointly if any study reports the
+cross-tab. 4. Add Saudi Cancer Registry figures used in the Introduction
+(Basudan 2022 already; add the most recent SCR report). \textbf{Accept.}
+Every anchor value has a citation + table/page reference in a YAML
+comment and is double-checked by a second reader (V2).
+
+\hypertarget{r7-sample-size-justification}{%
+\subsection{R7 --- Sample-size
+justification}\label{r7-sample-size-justification}}
+
+\textbf{Action.} Use \texttt{pmsampsize} (R) or a Python port for a
+multinomial outcome (Riley et al.~BMJ 2020; Pate et al. for
+multinomial). Inputs: 10 parameters, smallest class prevalence 0.089,
+anticipated Cox--Snell R² from v0.1 (compute from METABRIC logistic
+model). Write the output into \texttt{results/sample\_size.json} and a
+sentence in Methods via a macro. \textbf{Accept.} Required n ≤ 2386, or
+the paper says it is not met.
+
+\hypertarget{r8-imaging-arm-b1-kau-bcmd-saudi-mammography}{%
+\subsection{R8 --- Imaging arm B1: KAU-BCMD (Saudi
+mammography)}\label{r8-imaging-arm-b1-kau-bcmd-saudi-mammography}}
+
+\textbf{Action.} 1. \texttt{pip\ install\ kaggle}; place
+\texttt{\textasciitilde{}/.kaggle/kaggle.json};
+\texttt{python\ scripts/download\_imaging.py\ kau\_bcmd}. 2. Build
+\texttt{src/bcgrade/imaging/kau.py}: index images → patient/case id →
+BI-RADS label; record the version (the Kaggle folders hold BI-RADS 1, 3,
+4, 5; the paper describes 1--5 --- document what you downloaded). 3.
+Task: BI-RADS 1 vs 3 vs 4--5 (or benign-appearing vs suspicious),
+\textbf{StratifiedGroupKFold by case}. 4. Models: frozen ImageNet
+ViT/ConvNeXt or a mammography foundation model → embeddings → logistic
+regression; then fine-tuned EfficientNet-B0 on a GPU. Same
+metrics/calibration code. 5. Leakage demo: image-level vs case-level
+split (report like E4-d). \textbf{Accept.} No case appears in two folds
+(unit test). Results in a new section ``Imaging arm''.
+
+\hypertarget{r9-imaging-arm-b2-cdd-cesm-egypt-and-busi-egypt}{%
+\subsection{R9 --- Imaging arm B2: CDD-CESM (Egypt) and BUSI
+(Egypt)}\label{r9-imaging-arm-b2-cdd-cesm-egypt-and-busi-egypt}}
+
+\textbf{Action.}
+\texttt{python\ scripts/download\_imaging.py\ cdd\_cesm\ -\/-manifest-only},
+then full download; BUSI via Kaggle. Tasks: pathology benign vs
+malignant (CDD-CESM, BUSI) and BI-RADS (CDD-CESM). Cross-site check:
+train on CDD-CESM low-energy images, test on KAU-BCMD for a ``suspicious
+vs not'' label mapping (document the mapping table in
+\texttt{configs/}). \textbf{Accept.} Patient-grouped CV; external
+cross-site AUC reported with CI.
+
+\hypertarget{r10-duke-breast-cancer-mri-clinical-radiomics-restores-bi-rads-era-variables}{%
+\subsection{R10 --- Duke-Breast-Cancer-MRI clinical + radiomics
+(restores BI-RADS-era
+variables)}\label{r10-duke-breast-cancer-mri-clinical-radiomics-restores-bi-rads-era-variables}}
+
+\textbf{Why.} It is the only open cohort linking Nottingham grade to
+mammographic calcification, density and MRI radiomics (922 patients; CC
+BY-NC 4.0). \textbf{Action.} Download the clinical XLSX and the
+529-feature radiomics XLSX from TCIA (no image download needed). Add
+\texttt{duke()} to \texttt{harmonise.py} (map Nottingham grade; drop
+tubule/nuclear/mitotic scores --- leakage; code calcification and
+density). Add Duke as (a) external validation cohort for the full CDM
+model, (b) a clinical + radiomics fusion model (E9), compared with the
+published radiomics benchmark (validation AUC 0.722 for grade 3 vs 1--2;
+cite after V1 verification). \textbf{Accept.} New external row for Duke;
+licence note (non-commercial) added to Data availability.
+
+\hypertarget{r11-manuscript-update}{%
+\subsection{R11 --- Manuscript update}\label{r11-manuscript-update}}
+
+\textbf{Action.} Re-run \texttt{make\ report\ paper}. Rewrite only
+prose; never hard-code a number (CLAUDE.md rule 1). Update the abstract
+(≤ 300 words for most journals) and the TRIPOD+AI table.
+\textbf{Accept.}
+\texttt{grep\ -nE\ "{[}0-9{]}\textbackslash{}.{[}0-9{]}\{2,\}"\ paper/main.tex\ paper/sections/*.tex}
+shows only published anchor figures (Saudi/registry) and software
+versions, no results.
+
+\hypertarget{v1-citation-verification}{%
+\subsection{V1 --- Citation
+verification}\label{v1-citation-verification}}
+
+Check every \texttt{refs.bib} entry with a DOI resolver; fix all
+\texttt{VERIFY} notes (wang2022duke, kim2025grade, kussaibi2021saudi
+DOI, mbcproject2022). Remove uncited entries.
+
+\hypertarget{v2-anchor-verification}{%
+\subsection{V2 --- Anchor verification}\label{v2-anchor-verification}}
+
+Second reader re-transcribes \texttt{configs/anchors.yaml} from the
+source PDFs blind, then diff.
+
+\hypertarget{v3-reporting-checklists}{%
+\subsection{V3 --- Reporting checklists}\label{v3-reporting-checklists}}
+
+Complete the full TRIPOD+AI (27 items) and STROBE checklists as
+supplementary PDFs; replace the abbreviated Table S5.
+
+\hypertarget{v4-independent-re-run}{%
+\subsection{V4 --- Independent re-run}\label{v4-independent-re-run}}
+
+On a clean machine: \texttt{git\ clone\ …\ \&\&\ make\ all};
+\texttt{numbers.tex} must match the committed version.
+
+\hypertarget{g1-github-zenodo-release}{%
+\subsection{G1 --- GitHub + Zenodo
+release}\label{g1-github-zenodo-release}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Create the GitHub repository (public), push \texttt{main} (data and
+  \texttt{results/*.npz} are git-ignored).
+\item
+  Enable the Zenodo--GitHub integration, tag \texttt{v1.0.0}, cite the
+  DOI in \texttt{paper/main.tex} and \texttt{CITATION.cff}.
+\item
+  Add a GitHub Action running \texttt{make\ data\ test} on push (CPU,
+  \textless{} 5 min).
+\end{enumerate}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{journal-targeting-note}{%
+\subsubsection{Journal targeting note}\label{journal-targeting-note}}
+
+Q1 options that publish open-data prediction studies with TRIPOD+AI:
+\emph{Breast Cancer Research and Treatment}, \emph{The Breast},
+\emph{JCO Clinical Cancer Informatics}, \emph{npj Breast Cancer} (needs
+imaging/genomic angle --- R8--R10), \emph{Diagnostic and Prognostic
+Research} (methods angle: the leakage audit). Decide after R10.
+
+\hypertarget{claude.md-working-rules-for-claude-code-in-this-repository}{%
+\section{CLAUDE.md --- working rules for Claude Code in this
+repository}\label{claude.md-working-rules-for-claude-code-in-this-repository}}
+
+This repo is the reproducibility package for the manuscript in
+\texttt{paper/main.tex} (open-data breast cancer histological-grade
+prediction). Start every session by reading \texttt{RUNBOOK.md} and the
+``Status'' table at its top.
+
+\hypertarget{non-negotiable-rules}{%
+\subsection{Non-negotiable rules}\label{non-negotiable-rules}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{No number is typed by hand into the paper.} Every figure,
+  table and in-text number comes from \texttt{results/} →
+  \texttt{experiments/report.py} → \texttt{paper/generated/}
+  (\texttt{numbers.tex} macros, \texttt{tab\_*.tex},
+  \texttt{fig\_*.pdf}). If you change an analysis, re-run
+  \texttt{make\ experiments\ report\ paper} and read the diff of
+  \texttt{numbers.tex}.
+\item
+  \textbf{Every learned step stays inside the sklearn/imblearn Pipeline}
+  (array copy → imputation → scaling → optional SMOTE → model). Never
+  fit an imputer, scaler, resampler or feature selector on data that
+  includes a test fold. \texttt{tests/test\_pipeline.py} guards this;
+  add a test when you add a step.
+\item
+  \textbf{Leakage columns are never predictors} of grade: NPI (contains
+  grade), Nottingham component scores (tubule/pleomorphism/mitotic),
+  stage (contains T/N but also used for selection),
+  PAM50/IntClust/Oncotype unless explicitly in a sensitivity analysis.
+  Keep \texttt{test\_leakage\_columns\_never\_in\_feature\_sets}
+  passing.
+\item
+  \textbf{In-situ disease is excluded, never relabelled.} ILC is never
+  merged with IDC. Grade is invasive Nottingham/differentiation grade
+  1--3 only.
+\item
+  \textbf{One row per patient.} Any image or multi-sample source must be
+  split with patient-grouped CV (\texttt{StratifiedGroupKFold}).
+\item
+  \textbf{Data are not redistributed.} \texttt{data/} is git-ignored.
+  Download scripts + \texttt{data/raw/MANIFEST.json} (SHA-256) are the
+  provenance record. Respect CC BY-NC terms (Duke MRI, BRACS). Never use
+  a source that needs a signed DUA (VinDr-Mammo, full EMBED) without the
+  PI's written decision.
+\item
+  \textbf{Seeds}: \texttt{configs/experiment.yaml:\ seed}. Do not change
+  the seed to improve a result.
+\item
+  Commit messages: imperative, one logical change each; never commit
+  \texttt{data/} or large \texttt{results/*.npz}.
+\end{enumerate}
+
+\hypertarget{layout}{%
+\subsection{Layout}\label{layout}}
+
+\begin{verbatim}
+configs/      datasets.yaml (sources, licences, roles) · experiment.yaml (CV, seeds, raking targets) · anchors.yaml (Saudi published figures)
+scripts/      download_tabular.py (open cBioPortal + UCI mirror) · download_imaging.py (arm B, Kaggle/TCIA)
+src/bcgrade/  harmonise.py (common data model) · describe.py (scale-appropriate stats) · models.py (ladder) · evaluate.py (metrics, CI, calibration, DCA, raking)
+experiments/  run.py (E1–E8) · report.py (tables/figures/macros)
+tests/        pytest guards for harmonisation and leakage
+paper/        main.tex · refs.bib · generated/ (never edit by hand)
+\end{verbatim}
+
+\hypertarget{common-commands}{%
+\subsection{Common commands}\label{common-commands}}
+
+\begin{verbatim}
+make data          # download + checksum
+make test          # guards
+make experiments   # E1–E8 (~15–25 min on 2 CPU cores at repeats=5)
+make report paper  # regenerate tables/figures/macros and compile the PDF
+python experiments/run.py e3 e5   # re-run selected stages (E5 and E7 depend on E2 + E3 outputs)
+\end{verbatim}
+
+\end{document}

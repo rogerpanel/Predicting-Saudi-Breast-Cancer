@@ -1,0 +1,14 @@
+% Shared pgfplots style. Data come from generated/data/*.csv (written by experiments/report.py).
+\definecolor{cA}{HTML}{2A78D6}\definecolor{cB}{HTML}{EB6834}\definecolor{cC}{HTML}{1BAF7A}\definecolor{cD}{HTML}{6250D6}
+\definecolor{gI}{HTML}{B9D3F2}\definecolor{gII}{HTML}{5D98DE}\definecolor{gIII}{HTML}{174F94}
+\definecolor{inkb}{HTML}{52514E}\definecolor{gridc}{HTML}{E4E3DF}
+\pgfplotstableset{col sep=semicolon}
+\pgfplotsset{
+  table/col sep=semicolon,
+  bcbase/.style={font=\sffamily\scriptsize, axis line style={inkb}, tick style={inkb},
+    major grid style={gridc}, tick align=outside, axis x line*=bottom, axis y line*=left,
+    legend style={draw=none, fill=none, font=\sffamily\scriptsize}, legend cell align=left},
+  dotci/.style={only marks, mark=*, mark size=1.6pt, #1, error bars/.cd, x dir=both, x explicit,
+    error bar style={#1, line width=1pt}, error mark=none},
+}
+\newcommand{\gdata}[1]{generated/data/#1.csv}

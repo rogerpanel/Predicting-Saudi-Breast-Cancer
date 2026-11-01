@@ -1,0 +1,37 @@
+seed: 20261017
+cv:
+  outer_folds: 5
+  repeats: 10         # submission run (RUNBOOK R3; v0.1 used 5)
+  inner_folds: 3
+  scoring: neg_log_loss
+bootstrap: 2000       # submission run (v0.1 used 1000)
+dev_cohort: METABRIC
+external_full: [MSK-2018, Duke MRI]
+external_core: [MSK-2018, MBCproject, Sanger, Broad (MX/VN), Duke MRI]
+lodo_cohorts: [METABRIC, MSK-2018, MBCproject, Sanger, Duke MRI]
+ladder: [majority, mlr, ordinal, knn, rf, xgb, lgbm]
+optional_models: [tabpfn]   # run only if weights are available (gated on Hugging Face; RUNBOOK R5)
+mi: {m: 20, models: [mlr, xgb]}   # RUNBOOK R4
+lodo_models: [mlr, ordinal, rf, xgb, lgbm]
+# expected SHAP / coefficient directions for P(grade 3), pre-specified before E6 was run
+expected_direction:
+  er: -1
+  pr: -1
+  her2: +1
+  t_cat: +1
+  n_pos: +1
+  age: -1
+  hist_ilc: -1
+saudi_raking:            # Kussaibi 2021, Saudi nationals (configs/anchors.yaml)
+  er: {1.0: 0.573, 0.0: 0.427}
+  pr: {1.0: 0.450, 0.0: 0.550}
+  her2: {1.0: 0.253, 0.0: 0.747}
+  hist_r: {idc: 0.913, ilc: 0.070, other: 0.017}
+  age_le50: {1.0: 0.50, 0.0: 0.50}
+# raking sensitivity: share aged <=50 y when an anchor reports only the median (Kussaibi: median 51)
+age_le50_default: 0.50
+age_le50_sensitivity: [0.40, 0.45, 0.50, 0.55, 0.60]
+transport_cohorts: [METABRIC, MSK-2018, Duke MRI]
+transport_boot: 500
+radiomics: {repeats: 10, C_grid: [0.001, 0.003, 0.01, 0.03, 0.1]}
+sample_size: {n_params: 10, shrinkage: 0.9, delta: 0.05}

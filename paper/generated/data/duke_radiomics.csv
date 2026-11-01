@@ -1,0 +1,4 @@
+label;y;macro;macro_em;macro_ep;g3;g3_em;g3_ep
+Clinical (full set);2;0.69421;0.03129;0.032983;0.76852;0.037645;0.04199
+DCE-MRI radiomics (529 features);1;0.60791;0.032667;0.037305;0.66715;0.040991;0.050671
+Clinical + radiomics;0;0.64768;0.029974;0.036903;0.73094;0.03767;0.046315

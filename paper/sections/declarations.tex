@@ -1,0 +1,28 @@
+\section*{Data and code availability}
+All data are publicly available from their custodians: cBioPortal studies \path{brca_metabric},
+\path{breast_msk_2018}, \path{brca_mbcproject_2022}, \path{brca_sanger}, \path{brca_broad},
+\path{brca_bccrc} and \path{brca_tcga_pan_can_atlas_2018}; the TCIA Duke-Breast-Cancer-MRI clinical and
+imaging-feature tables (CC BY-NC 4.0; non-commercial use); and the UCI Breast Cancer dataset
+(doi:10.24432/C51P4M). Data are not redistributed: a download script retrieves them and verifies the
+SHA-256 checksums recorded in the repository (files retrieved 17--18 October 2026). Code, configuration,
+result files and the manuscript sources are available at \CodeURL; \texttt{make all} reproduces every
+table, figure and in-text number.
+
+\section*{Ethics statement}
+Secondary analysis of de-identified, publicly released data; no ethics approval or consent was
+required. The study was not registered.
+
+\section*{Declaration of generative AI and AI-assisted technologies in the writing process}
+During the preparation of this work the author(s) used Claude (Anthropic) to assist with analysis code,
+reference checking and drafting of the text. After using this tool, the author(s) reviewed and edited
+the content as needed and take(s) full responsibility for the content of the publication. [Confirm or
+edit to reflect actual use.]
+
+\ifanon
+\section*{Declarations}
+Funding, competing interests, author contributions and acknowledgements are provided on the separate
+title page.
+\else
+\IfFileExists{author_declarations.tex}{\input{author_declarations.tex}}{\section*{Declarations}
+[Author contributions, funding, competing interests and AI-use declaration to be added.]}
+\fi

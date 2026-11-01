@@ -1,0 +1,12 @@
+\pgfplotstableread{\gdata{shap}}\tblshap
+\begin{tikzpicture}
+\begin{groupplot}[group style={group size=2 by 1, horizontal sep=4mm, yticklabels at=edge left}, bcbase,
+  width=0.42\linewidth, height=6cm, ytick=data, yticklabels from table={\tblshap}{label}, enlarge y limits=0.07,
+  xmajorgrids, title style={font=\sffamily\scriptsize\bfseries}]
+\nextgroupplot[title={Importance: mean $|$SHAP$|$ (grade 3)}, xbar, bar width=6pt, xmin=0, xlabel={log-odds}]
+\addplot[fill=cA, draw=none] table[x=meanabs, y=y] {\tblshap};
+\nextgroupplot[title={Direction: Spearman $\rho$ (value, SHAP)}, xmin=-1, xmax=1, xlabel={$\rho$ (bootstrap 95\% CI)}]
+\addplot[dotci=cB] table[x=rho, y=y, x error minus=rho_em, x error plus=rho_ep] {\tblshap};
+\draw[inkb] (axis cs:0,-1) -- (axis cs:0,20);
+\end{groupplot}
+\end{tikzpicture}

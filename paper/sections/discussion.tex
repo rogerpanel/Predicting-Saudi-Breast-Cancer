@@ -1,0 +1,104 @@
+\section{Discussion}\label{sec:discussion}
+
+\subsection{Principal findings}
+This study shows that the routine clinicopathological record carries moderate, reproducible
+information about breast cancer grade. Macro-AUCs were \IntAucMinR--\IntAucMaxR{} internally and
+\ExtAucMin--\ExtAucMax{} across five external cohorts from three continents. Grade~3 was the easiest
+class to recognise and grade~2 the hardest, which mirrors the known difficulty of grade~2 for
+pathologists~\citep{boiesen2000grading,vandooijeweert2020variation}. Hormone-receptor status was the
+most informative variable, and tumour size, nodal status, HER2 and lobular histology contributed in
+the directions that clinicians would expect.
+
+Three further findings matter for anyone who builds or uses such models. First, flexibility did not
+help: no flexible learner beat multinomial logistic regression internally, and external differences
+were rare and went in both directions. This agrees with systematic reviews of clinical prediction
+models~\citep{christodoulou2019lr} and is unsurprising when the predictors are few and mostly binary.
+Second, discrimination and predictor effects transported well (calibration slopes close to one), but
+the average level of the predictions did not. The same frozen model under-predicted grade~3 in
+MSK-2018 and over-predicted it in Duke, because the share of grade~3 tumours differs more between
+cohorts than their predictors do. A simple intercept update fixed the problem in both cohorts.
+Third, the size of the leakage effect was striking. Each shortcut that is easy to make with public
+breast cancer data inflated performance, by up to \LeakMaxInfl{} in macro-AUC. That is more than the
+whole distance between a useless model and the best correctly validated one.
+
+\subsection{What the imaging extension adds}
+In the Duke cohort, 529 MRI radiomic features did not improve on the routine record, and adding them
+lowered cross-validated discrimination (paired $\Delta$ \DukeFusDelta, \DukeFusDeltaLo{} to
+\DukeFusDeltaHi). With \NDukeRad{} graded patients and hundreds of correlated features, the model
+could not find signal beyond what receptor status, tumour size and nodal status already provide.
+Published radiomics results for grade~\citep{wang2022duke,wang2026dcemrigrade} should therefore be
+judged against a clinical baseline evaluated in the same patients, as done here.
+
+\subsection{What this means for Saudi Arabia}
+Re-weighting to the Saudi profile raised the grade-3 share of every Western cohort by \ShiftMin{} to
+\ShiftMax{} percentage points. The Saudi case-mix---fewer receptor-positive and more HER2-positive
+tumours---is therefore associated with more high-grade disease. The level reached, however,
+depended on the source cohort (\RwGThreeKMin--\RwGThreeKMax\% for the Dammam profile), because the
+Western cohorts already differed in their grade-3 share (\ObsGThreeMin--\ObsGThreeMax\%). Published
+Saudi series report less grade~3 than the METABRIC- and MSK-based projections: \SaudiGThreeA\% in
+Dammam, \SaudiGThreeB\% in Riyadh and \PoolGThree\% when pooled across \PoolK{} series. A model
+developed in METABRIC would predict, on average, \PredGThreeMet\% grade~3 for patients with the
+Dammam profile, about \OverPredPP{} percentage points too many. Several explanations are possible:
+differences in grading practice (grade~2 is the least reproducible category), referral and era
+effects in hospital series, or real differences in tumour biology. Summary data cannot separate them.
+The practical message is clear, though. A Western grade model should not be used for Saudi patients
+without recalibrating its intercept, which needs only the local grade distribution. The most valuable
+next step is an openly shared, de-identified, grade-labelled Saudi cohort; the code released with this
+paper can validate and recalibrate the models on such a cohort with one additional data-mapping
+function.
+
+\subsection{Strengths and limitations}
+The main strengths are full reproducibility from public data with recorded checksums, an analysis plan
+fixed before the experiments, five external cohorts from three continents (one recruited through
+imaging rather than genomics), paired model comparisons, and an explicit measurement of leakage.
+
+The study also has important limitations. Grade was assigned by different pathologists, in different
+eras, under slightly different conventions; the Ljubljana ``degree of malignancy'' predates the
+Elston--Ellis modification. Disagreement between pathologists~\citep{boiesen2000grading,longacre2006interobserver}
+limits the discrimination that any model can reach. Several cohorts were assembled for genomic
+studies or enriched for advanced disease, so they are not population-based. Tumour size was reduced
+to T category, and tumour size and nodal status were missing in three external cohorts. The
+sample-size criteria were \SSMet: the grade~1 versus grade~2 comparison, which carries little signal,
+would need \SSRequired{} patients against \SSAvailable{} available. Penalised estimation and
+calibration slopes close to one suggest that overfitting was small in practice, but estimates at the
+grade~1/2 boundary should be read with care. The Saudi analysis relies on published summary figures,
+not patient data. The Dammam series does not report the share of patients aged $\le$50 years (the
+results were not sensitive to the assumed value); the Riyadh series comes from a referral centre with
+many stage~IV patients and about 10\% non-Saudi patients; the Madinah series grades ductal
+carcinoma only; and the Najran series grades all lesions, including in-situ and benign ones, so it
+was used only in a sensitivity analysis. \TabpfnLimitation{}Finally, the image-level analyses that
+we had planned with the Saudi KAU-BCMD mammograms~\citep{alsolami2021kau} and the Egyptian CDD-CESM
+and BUSI collections~\citep{khaled2022cddcesm,aldhabyani2020busi} could not be run, because their
+hosts were not reachable from the build environment.
+
+\subsection{Implications for practice and research}
+A routine-variable model is not a substitute for histological grading. It has three realistic uses:
+imputing missing grade in registry or trial data with calibrated uncertainty; flagging records whose
+assigned grade is unlikely given the rest of the record, as a quality-assurance check; and serving as
+the minimum baseline that image-based grading tools must beat in the same patients, with
+patient-level data splits and with grade-encoding columns removed. Each use requires local
+recalibration of the intercept.
+
+\section{Conclusions}
+This study answers a simple question with open, reproducible evidence: routine clinicopathological
+variables predict breast cancer grade moderately and consistently, with macro-AUCs of about
+\IntAucMaxR{} internally and up to \ExtAucMax{} in external cohorts from three continents.
+
+The results contribute to knowledge in four ways. First, they set a transparent, externally
+validated benchmark for grade prediction that image-based methods can be measured against. Second,
+they show that logistic regression is enough for this task; gradient boosting, random forests and MRI
+radiomics added nothing. Third, they show that predictor effects transport across countries but
+baseline grade frequencies do not, so calibration, not discrimination, is the weak point when a
+grade model moves to a new hospital. Fourth, to our knowledge they are the first to quantify how much common
+leakage shortcuts inflate apparent performance in grade prediction---by up to \LeakMaxInfl{} in
+macro-AUC---which gives reviewers and readers a concrete reason to distrust near-perfect results.
+
+For practitioners, the message is practical. A simple, interpretable regression model can impute
+missing grade or flag implausible grades, provided it is recalibrated to the local grade
+distribution. Models that use the Nottingham Prognostic Index or the component scores, or that
+preprocess data before splitting, should not be trusted. For Saudi Arabia, the results show that the
+local case-mix implies more high-grade disease than in Western cohorts, yet Western-trained models
+would still over-predict grade~3 compared with published Saudi series. Local recalibration is
+therefore essential, and an openly shared, grade-labelled Saudi cohort would be the most valuable
+next contribution. All code, settings and results are public, so these findings can be checked,
+updated and extended as new data become available.

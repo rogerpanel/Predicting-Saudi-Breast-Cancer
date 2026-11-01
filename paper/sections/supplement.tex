@@ -1,0 +1,54 @@
+\begin{table}[H]\centering\small
+\caption{Participant flow (STROBE).}\label{tab:flow}
+\input{generated/tab_flow.tex}
+\end{table}
+
+\begin{table}[H]\centering\small
+\caption{Leave-one-dataset-out validation (core feature set).}\label{tab:lodo}
+\tabfit{\input{generated/tab_lodo.tex}}
+\end{table}
+
+\begin{table}[H]\centering\small
+\caption{Calibration of P(grade 3): intercept (calibration-in-the-large) and slope, internally, in
+the external full-feature cohorts and after a cross-fitted intercept update.}\label{tab:cal}
+\tabfit{\input{generated/tab_calibration.tex}}
+\end{table}
+
+\begin{table}[H]\centering\small
+\caption{Multiclass calibration-in-the-large: observed versus mean predicted prevalence of each grade (\%).}\label{tab:oe}
+\tabfit{\input{generated/tab_oe.tex}}
+\end{table}
+
+\begin{table}[H]\centering\small
+\caption{Missing data: multiple imputation with pooled predictions and complete-case analysis versus
+the primary single in-fold imputation (METABRIC, nested cross-validation).}\label{tab:mi}
+\tabfit{\input{generated/tab_mi.tex}}
+\end{table}
+
+\begin{table}[H]\centering\small
+\caption{Minimum sample size for developing the multinomial model (Riley criteria applied to each
+pairwise sub-model).}\label{tab:ss}
+\tabfit{\input{generated/tab_samplesize.tex}}
+\end{table}
+
+\begin{table}[H]\centering\small
+\caption{Sensitivity of the Saudi-weighted METABRIC grade distribution (\%) to the assumed share of
+patients aged $\le$50 years in the Dammam series (which reports only the median age).}\label{tab:agesens}
+\input{generated/tab_agesens.tex}
+\end{table}
+
+\begin{table}[H]\centering\small
+\caption{Ljubljana sensitivity analysis (``degree of malignancy''; age band, menopausal status,
+tumour-size band, nodes, node capsule invasion; \Repeats$\times$5-fold CV).}\label{tab:lj}
+\tabfit{\input{generated/tab_ljubljana.tex}}
+\end{table}
+
+\begin{figure}[H]\centering
+\includegraphics[width=0.86\linewidth]{generated/fig_shap.pdf}
+\caption{SHAP beeswarm for the grade-3 output of XGBoost in METABRIC; colour encodes the (imputed)
+feature value.}\label{fig:beeswarm}
+\end{figure}
+
+\small
+\input{sections/tripod.tex}
+\normalsize

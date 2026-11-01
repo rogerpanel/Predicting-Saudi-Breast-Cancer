@@ -1,0 +1,21 @@
+\begin{tabular}{llrrrrrr}
+\toprule
+Model & Setting & $n$ & Obs. G3 & Mean pred. & Intercept & Slope & G3-AUC \\
+\midrule
+Multinomial LR & METABRIC (internal CV) & 2386 & 0.502 & 0.502 & -0.00 & 1.00 & 0.753 \\
+Multinomial LR & MSK-2018 (external) & 1573 & 0.676 & 0.472 & +0.99 & 1.03 & 0.727 \\
+Multinomial LR & MSK-2018 (intercept-updated) & 1573 & 0.676 & 0.676 & +0.00 & 1.03 & 0.727 \\
+Multinomial LR & Duke MRI (external) & 637 & 0.325 & 0.517 & -1.02 & 0.96 & 0.779 \\
+Multinomial LR & Duke MRI (intercept-updated) & 637 & 0.325 & 0.325 & +0.00 & 0.96 & 0.779 \\
+Ordinal LR (prop. odds) & METABRIC (internal CV) & 2386 & 0.502 & 0.501 & +0.00 & 0.96 & 0.752 \\
+Ordinal LR (prop. odds) & MSK-2018 (external) & 1573 & 0.676 & 0.474 & +0.97 & 1.02 & 0.725 \\
+Ordinal LR (prop. odds) & MSK-2018 (intercept-updated) & 1573 & 0.676 & 0.676 & +0.00 & 1.02 & 0.724 \\
+Ordinal LR (prop. odds) & Duke MRI (external) & 637 & 0.325 & 0.520 & -1.05 & 0.92 & 0.778 \\
+Ordinal LR (prop. odds) & Duke MRI (intercept-updated) & 637 & 0.325 & 0.325 & +0.00 & 0.92 & 0.777 \\
+XGBoost & METABRIC (internal CV) & 2386 & 0.502 & 0.503 & -0.00 & 1.02 & 0.755 \\
+XGBoost & MSK-2018 (external) & 1573 & 0.676 & 0.474 & +0.98 & 1.03 & 0.726 \\
+XGBoost & MSK-2018 (intercept-updated) & 1573 & 0.676 & 0.676 & +0.00 & 1.03 & 0.726 \\
+XGBoost & Duke MRI (external) & 637 & 0.325 & 0.519 & -1.06 & 0.97 & 0.789 \\
+XGBoost & Duke MRI (intercept-updated) & 637 & 0.325 & 0.325 & -0.00 & 0.97 & 0.789 \\
+\bottomrule
+\end{tabular}

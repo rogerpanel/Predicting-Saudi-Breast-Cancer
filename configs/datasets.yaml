@@ -1,0 +1,116 @@
+# Open data sources used by the study.
+# access: open = anonymous download, no approval; login = free account / click-through;
+#         dua = signed data-use agreement (EXCLUDED from the core analysis by design).
+# role:   dev = development cohort; ext = external validation; desc = descriptive only;
+#         sens = sensitivity analysis; img = imaging arm (protocol, not run in v0.1).
+
+cbioportal_base: https://media.githubusercontent.com/media/cBioPortal/datahub/master/public
+
+tabular:
+  metabric:
+    study_id: brca_metabric
+    citation: curtis2012metabric; pereira2016metabric
+    country: UK/Canada
+    access: open
+    licence: "cBioPortal datahub (ODbL-style open terms; see datahub LICENSE)"
+    role: dev
+  msk2018:
+    study_id: breast_msk_2018
+    citation: razavi2018msk
+    country: USA
+    access: open
+    role: ext
+  mbcproject:
+    study_id: brca_mbcproject_2022
+    citation: mbcproject2022
+    country: USA/Canada (patient-partnered)
+    access: open
+    role: ext
+  sanger:
+    study_id: brca_sanger
+    citation: stephens2012sanger
+    country: UK/Europe (multi-centre)
+    access: open
+    role: ext
+  broad:
+    study_id: brca_broad
+    citation: banerji2012broad
+    country: Mexico and Vietnam
+    access: open
+    role: ext
+  bccrc:
+    study_id: brca_bccrc
+    citation: shah2012bccrc
+    country: Canada (triple-negative series)
+    access: open
+    role: desc
+  tcga:
+    study_id: brca_tcga_pan_can_atlas_2018
+    citation: tcga2012brca
+    country: USA multi-site
+    access: open
+    role: desc        # no structured grade field
+  duke:
+    files:
+      - https://raw.githubusercontent.com/naomifridman/BreastDCEDL/961c458a393b3173ce923e7bc78409790153a15e/DUKE/TCIA_metadata/Clinical_and_Other_Features.xlsx
+      - https://raw.githubusercontent.com/naomifridman/BreastDCEDL/961c458a393b3173ce923e7bc78409790153a15e/DUKE/TCIA_metadata/Imaging_Features.xlsx
+    mirror_of: https://www.cancerimagingarchive.net/collection/duke-breast-cancer-mri/ (TCIA, doi:10.7937/TCIA.e3sv-re93)
+    citation: saha2018duke
+    country: USA (Duke Hospital, 2000-2014)
+    access: open (CC BY-NC 4.0; non-commercial use only; checksums in MANIFEST.json)
+    role: ext         # second full-feature external cohort + clinical/radiomics arm (E9)
+  ljubljana:
+    url: https://raw.githubusercontent.com/jbrownlee/Datasets/master/breast-cancer.csv
+    mirror_of: https://archive.ics.uci.edu/dataset/14/breast+cancer
+    citation: zwitter1988ljubljana
+    country: Slovenia
+    access: open
+    role: sens
+
+imaging:   # arm B -- download scripts provided; not executed in v0.1 (hosts unreachable from build sandbox)
+  kau_bcmd:
+    host: kaggle
+    id: asmaasaad/king-abdulaziz-university-mammogram-dataset
+    country: Saudi Arabia (Jeddah)
+    access: login
+    labels: [birads, density]
+    citation: alsolami2021kau
+  cdd_cesm:
+    host: tcia
+    collection: CDD-CESM
+    country: Egypt (Cairo)
+    access: open
+    labels: [birads, pathology, calcification]
+    citation: khaled2022cddcesm
+  busi:
+    host: kaggle
+    id: aryashah2k/breast-ultrasound-images-dataset
+    country: Egypt (Cairo)
+    access: login
+    labels: [benign_malignant_normal, mask]
+    citation: aldhabyani2020busi
+  cbis_ddsm:
+    host: tcia
+    collection: CBIS-DDSM
+    country: USA
+    access: open
+    labels: [birads, calcification, pathology]
+    citation: lee2017cbis
+  cmmd:
+    host: tcia
+    collection: CMMD
+    country: China
+    access: open
+    labels: [pathology, molecular_subtype]
+    citation: cui2021cmmd
+  duke_mri:
+    host: tcia
+    collection: Duke-Breast-Cancer-MRI
+    country: USA
+    access: open (CC BY-NC 4.0)
+    labels: [nottingham_grade, receptors, calcification]
+    citation: saha2018duke
+  vindr_mammo:
+    host: physionet
+    access: dua          # excluded under the no-approval rule
+    citation: nguyen2023vindr

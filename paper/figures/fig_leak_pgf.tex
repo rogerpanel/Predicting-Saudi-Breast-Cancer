@@ -1,0 +1,12 @@
+\pgfplotstableread{\gdata{leakage}}\tblleak
+\begin{tikzpicture}
+\begin{axis}[bcbase, width=0.55\linewidth, height=6cm, xlabel={Cross-validated macro-AUC},
+  ytick=data, yticklabels from table={\tblleak}{label}, xmajorgrids, enlarge y limits=0.08,
+  legend columns=2, legend style={at={(0.5,1.02)}, anchor=south}]
+\addplot[only marks, mark=*, mark size=1.8pt, cA, error bars/.cd, x dir=plus, x explicit, error mark=none,
+  error bar style={gridc, line width=2pt}]
+  table[x=honest, y=y, x error expr=\thisrow{leaky}-\thisrow{honest}] {\tblleak};
+\addplot[only marks, mark=*, mark size=1.8pt, cB] table[x=leaky, y=y] {\tblleak};
+\legend{Correct protocol, Leaky protocol}
+\end{axis}
+\end{tikzpicture}

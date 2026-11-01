@@ -1,0 +1,9 @@
+\begin{tabular}{lrrrrr}
+\toprule
+Model (L2 logistic) & Features & Macro-AUC (95\% CI) & G3-AUC (95\% CI) & $\Delta$ macro-AUC vs clinical (95\% CI) & Brier \\
+\midrule
+Clinical (full set) & 10 & 0.694 (0.663--0.727) & 0.769 (0.731--0.811) & ref. & 0.551 \\
+DCE-MRI radiomics (529 features) & 529 & 0.608 (0.575--0.645) & 0.667 (0.626--0.718) & -0.085 (-0.126, -0.045) & 0.600 \\
+Clinical + radiomics & 539 & 0.648 (0.618--0.685) & 0.731 (0.693--0.777) & -0.045 (-0.077, -0.011) & 0.582 \\
+\bottomrule
+\end{tabular}

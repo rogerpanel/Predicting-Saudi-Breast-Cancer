@@ -1,0 +1,21 @@
+\pgfplotstableread{\gdata{model_ladder}}\tblladder
+\begin{tikzpicture}
+\begin{groupplot}[group style={group size=4 by 1, horizontal sep=4mm, yticklabels at=edge left},
+  bcbase, width=0.31\linewidth, height=5.2cm, xmin=0.45, xmax=0.88, xmajorgrids,
+  ytick=data, yticklabels from table={\tblladder}{label}, enlarge y limits=0.1,
+  xtick={0.5,0.6,0.7,0.8}, title style={font=\sffamily\scriptsize\bfseries, yshift=-1mm}]
+\nextgroupplot[title={Internal (METABRIC CV)}]
+\addplot[dotci=cA] table[x=int, y=y, x error minus=int_em, x error plus=int_ep] {\tblladder};
+\draw[inkb, dashed] (axis cs:0.5,-1) -- (axis cs:0.5,10);
+\nextgroupplot[title={MSK-2018 (full)}]
+\addplot[dotci=cB] table[x=msk, y=y, x error minus=msk_em, x error plus=msk_ep] {\tblladder};
+\draw[inkb, dashed] (axis cs:0.5,-1) -- (axis cs:0.5,10);
+\nextgroupplot[title={Duke MRI (full)}]
+\addplot[dotci=cD] table[x=duke, y=y, x error minus=duke_em, x error plus=duke_ep] {\tblladder};
+\draw[inkb, dashed] (axis cs:0.5,-1) -- (axis cs:0.5,10);
+\nextgroupplot[title={MBCproject (core)}]
+\addplot[dotci=cC] table[x=mbcp, y=y, x error minus=mbcp_em, x error plus=mbcp_ep] {\tblladder};
+\draw[inkb, dashed] (axis cs:0.5,-1) -- (axis cs:0.5,10);
+\end{groupplot}
+\node[font=\sffamily\scriptsize, anchor=north] at ($(group c2r1.south east)!0.5!(group c3r1.south west)+(0,-6mm)$) {Macro-averaged one-vs-rest AUC (95\% CI); dashed = chance};
+\end{tikzpicture}

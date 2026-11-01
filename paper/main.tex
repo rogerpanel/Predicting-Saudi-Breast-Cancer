@@ -1,0 +1,70 @@
+% Main manuscript, Elsevier elsarticle (target: Computers in Biology and Medicine).
+% Named build:       latexmk -pdf main.tex
+% Blinded build:     latexmk -pdf manuscript_anonymised.tex   (defines \ANON before loading this file)
+\documentclass[preprint,12pt,a4paper]{elsarticle}
+\newif\ifanon
+\ifdefined\ANON \anontrue \fi
+\usepackage[T1]{fontenc}
+\usepackage{newtxtext,newtxmath}
+\usepackage[scaled=0.92]{helvet}
+\usepackage{microtype}
+\usepackage{amsmath}
+\usepackage{booktabs,array,longtable,graphicx,float,placeins}
+\usepackage{adjustbox}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{url}
+\usepackage{lineno}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta,calc,matrix}
+\usepackage{pgfplots,pgfplotstable}
+\pgfplotsset{compat=1.18}
+\usepgfplotslibrary{groupplots}
+\usepackage[colorlinks=true,linkcolor=blue!50!black,citecolor=blue!50!black,urlcolor=blue!50!black]{hyperref}
+\biboptions{sort&compress}
+\setlength{\parskip}{2pt}
+\input{generated/numbers.tex}
+\input{figures/pgfstyle.tex}
+\newcommand{\tabfit}[1]{\resizebox{\linewidth}{!}{#1}}
+% repository link: replace with the anonymous mirror for review and the public URL/DOI after acceptance
+\newcommand{\CodeURL}{\url{https://anonymous.4open.science/r/bc-grade-opendata}}
+\journal{Computers in Biology and Medicine}
+
+\begin{document}
+\ifanon\linenumbers\fi
+
+\begin{frontmatter}
+\title{Predicting breast cancer grade from routine clinical data: an open multi-cohort study with transport to Saudi patients}
+
+\ifanon
+\author{[Author details removed for double-anonymised review]}
+\else
+\IfFileExists{authors.tex}{\input{authors.tex}}{\input{authors_placeholder.tex}}
+\fi
+
+\input{sections/abstract.tex}
+
+\begin{keyword}
+breast cancer \sep histological grade \sep clinical prediction model \sep external validation \sep
+calibration \sep data leakage \sep radiomics \sep transportability \sep Saudi Arabia \sep TRIPOD+AI
+\end{keyword}
+\end{frontmatter}
+
+\input{sections/introduction.tex}
+\input{sections/methods.tex}
+\input{sections/results.tex}
+\input{sections/discussion.tex}
+\input{sections/declarations.tex}
+
+\bibliographystyle{elsarticle-num}
+\bibliography{refs}
+
+\clearpage
+\appendix
+\renewcommand{\thetable}{S\arabic{table}}
+\renewcommand{\thefigure}{S\arabic{figure}}
+\setcounter{table}{0}\setcounter{figure}{0}
+\section*{Supplementary material}
+\input{sections/supplement.tex}
+
+\end{document}

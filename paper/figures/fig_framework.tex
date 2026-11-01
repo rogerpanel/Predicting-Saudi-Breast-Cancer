@@ -1,0 +1,65 @@
+% Figure 1 -- study framework (three lanes). Counts are macros from generated/numbers.tex.
+\begin{tikzpicture}[
+  font=\sffamily\scriptsize,
+  box/.style={draw=#1!65!black, fill=#1!7, rounded corners=2pt, align=left, inner sep=3pt,
+              text width=0.28\linewidth, minimum height=24mm},
+  lane/.style={font=\sffamily\scriptsize\bfseries, text=#1!60!black, rotate=90, anchor=south},
+  arr/.style={-{Latex[length=1.8mm]}, thick, draw=black!50},
+  bus/.style={thick, draw=black!50},
+]
+\matrix (m) [row sep=8mm, column sep=5mm, ampersand replacement=\&] {
+\node[box=blue] (src) {\textbf{1 Open sources} (no approval, no DUA)\\
+  cBioPortal: METABRIC, MSK-2018, MBCproject, Sanger, Broad (Mexico/Vietnam), BCCRC, TCGA\\
+  TCIA: Duke-Breast-Cancer-MRI\\
+  UCI: Ljubljana\\
+  \emph{SHA-256 manifest; no redistribution}}; \&
+\node[box=blue] (cdm) {\textbf{2 Common data model} (one row/patient)\\
+  Outcome: invasive Nottingham grade 1--3\\
+  In-situ disease excluded, never relabelled\\
+  ILC kept separate from IDC; men excluded\\
+  Quarantined: NPI, component scores, stage}; \&
+\node[box=blue] (fs) {\textbf{3 Analysis sets}\\
+  \NGradedTotal{} graded patients, \NGradedCohorts{} cohorts\\
+  Full: age, menopause, ER, PR, HER2, histology, T, N\\
+  Core: age, ER, PR, HER2, histology}; \\
+\node[box=orange] (e1) {\textbf{E1 Describe} (STROBE)\\
+  Kendall $\tau_b$, bias-corrected Cram\'er's $V$, Spearman $\rho$\\
+  Bootstrap 95\% CIs; Benjamini--Hochberg\\
+  Proportional-odds model}; \&
+\node[box=orange] (e2) {\textbf{E2 Develop} in METABRIC ($n$=\NMetabric)\\
+  Nested \Repeats$\times$\Folds-fold CV; inner log-loss tuning\\
+  Baseline, LR, ordinal LR, $k$-NN, RF, XGBoost, LightGBM\\
+  In-fold impute$\to$scale$\to$model\\
+  Multiple imputation ($m$=\MIm); complete case}; \&
+\node[box=orange] (e3) {\textbf{E3/E5 Validate} (TRIPOD+AI)\\
+  Frozen models: MSK-2018, Duke (full); MBCproject, Sanger, Broad (core)\\
+  Leave-one-dataset-out\\
+  Calibration, intercept update, decision curves}; \\
+\node[box=teal] (e4) {\textbf{E4 Leakage audit}\\
+  NPI as predictor\\ SMOTE/imputation before split\\ Component scores (Sanger, Duke)\\ Record-level split}; \&
+\node[box=teal] (e6) {\textbf{E6/E9 Plausibility and imaging}\\
+  TreeSHAP directions vs pre-specified expectations; ordinal odds ratios\\
+  Duke: clinical vs DCE-MRI radiomics vs fusion}; \&
+\node[box=violet] (e7) {\textbf{E7 Transport to Saudi case-mix}\\
+  Rake cohorts to published Saudi ER, PR, HER2, histology, age\\
+  Implied vs published grade; pooled anchors; age sensitivity}; \\
+};
+\node[draw=black!55, fill=black!4, rounded corners=2pt, anchor=north, inner sep=3pt, align=center,
+      text width=0.92\linewidth] (out) at ([yshift=-6mm]m.south)
+  {\textbf{Output:} \texttt{make all} $\to$ \texttt{results/} $\to$ every table, figure and in-text number (\texttt{numbers.tex})};
+\draw[arr] (src) -- (cdm); \draw[arr] (cdm) -- (fs);
+% bus from data lane to analysis lane
+\coordinate (b1) at ($(fs.south)!0.5!(e3.north)$);
+\draw[bus] (fs.south) -- (b1) -- (b1 -| e1.north);
+\foreach \n in {e1,e2,e3} \draw[arr] (b1 -| \n.north) -- (\n.north);
+\draw[arr] (e2) -- (e3);
+% bus from analysis lane to audit lane
+\coordinate (b2) at ($(e2.south)!0.5!(e6.north)$);
+\draw[bus] (e2.south) -- (b2); \draw[bus] (b2 -| e4.north) -- (b2 -| e7.north);
+\draw[bus] (e3.south) -- (b2 -| e3.south);
+\foreach \n in {e4,e6,e7} \draw[arr] (b2 -| \n.north) -- (\n.north);
+\draw[arr] (m.south) -- (out.north);
+\node[lane=blue]   at ([xshift=-1mm]src.west) {Data};
+\node[lane=orange] at ([xshift=-1mm]e1.west)  {Analysis};
+\node[lane=teal]   at ([xshift=-1mm]e4.west)  {Audits \& transport};
+\end{tikzpicture}

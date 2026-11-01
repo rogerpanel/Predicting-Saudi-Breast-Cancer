@@ -1,0 +1,22 @@
+\begin{abstract}
+\textbf{Background:} Histological grade guides breast cancer treatment but is assigned only after
+tissue examination and is moderately reproducible. It is unknown how much of grade the routine record
+carries, whether such models transport, and what they predict for Saudi patients.
+\textbf{Methods:} We combined \NGradedTotal{} graded invasive breast cancers from \NGradedCohorts{}
+public cohorts into one data model. Seven models, from a baseline to gradient boosting, were
+developed in METABRIC (\NMetabric{} patients) with nested cross-validation and compared with
+logistic regression. Frozen models were validated in five external cohorts. We assessed
+discrimination, calibration and utility, measured leakage, tested 529 MRI radiomic features, and
+re-weighted the cohorts to published Saudi case-mix.
+\textbf{Results:} All learned models reached a macro-AUC of \IntAucMinR--\IntAucMaxR{} internally;
+XGBoost did not beat logistic regression (difference \XgbDeltaInt, 95\% CI \XgbDeltaIntLo{} to
+\XgbDeltaIntHi). External macro-AUCs were \FullMskMin--\FullMskMax{} and \FullDukeMin--\FullDukeMax{}
+in the two full-feature cohorts. Calibration slopes stayed near one, but the models under-predicted
+grade~3 in one cohort and over-predicted it in another; an intercept update corrected both. Leakage
+shortcuts inflated macro-AUC by up to \LeakMaxInfl. Radiomics did not improve on clinical variables.
+Saudi case-mix raised each cohort's grade-3 share by \ShiftMin{} to \ShiftMax{} points, yet a
+METABRIC model would predict \PredGThreeMet\% grade~3 against \SaudiGThreeA\% published.
+\textbf{Conclusions:} Routine variables predict grade moderately and consistently. Logistic
+regression is sufficient, but local recalibration is essential. Western-trained models would
+over-predict high-grade disease in Saudi patients.
+\end{abstract}

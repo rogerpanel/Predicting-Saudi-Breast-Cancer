@@ -1,0 +1,219 @@
+\section{Results}\label{sec:results}
+
+\subsection{Cohorts}
+After exclusions we analysed \NGradedTotal{} patients with a recorded grade in \NGradedCohorts{}
+cohorts, plus \NTcga{} ungraded TCGA patients for description (Table~\ref{tab:cohorts};
+participant flow in Supplementary Table~\ref{tab:flow}). The cohorts differed widely
+(Figure~\ref{fig:grade}). Median age ranged from \AgeMbc{} years in MBCproject to \AgeMetabric{} years
+in METABRIC. Grade~3 made up \GThreeMetabric\% of METABRIC, \GThreeMsk\% of MSK-2018, which is
+enriched for advanced disease, and \GThreeDuke\% of Duke. Compared with every open cohort except the
+triple-negative BCCRC series, the Dammam Saudi series~\citep{kussaibi2021saudi} had fewer ER-positive
+(57.3\%) and PR-positive (45.0\%) tumours; only Sanger had more HER2-positive tumours (Dammam
+25.3\%). Even so, the Dammam grade distribution (8.7/54.5/36.7\%) had more grade~2 and less grade~3
+than METABRIC.
+
+\begin{table}[htbp]\centering\small
+\caption{Characteristics of the open cohorts after harmonisation and of two published Saudi hospital
+series. Percentages are of patients with the variable recorded (missingness in
+\texttt{results/e1\_cohorts.csv}). MSK = MSK-2018; MBCP = MBCproject; Broad = Mexico and Vietnam;
+dev/ext/desc = development, external validation, descriptive. $^\dagger$Saudi nationals, King Fahd
+University Hospital, Dammam, 1998--2017~\citep{kussaibi2021saudi}. $^\ddagger$King Fahad Medical
+City, Riyadh, 2016--2019 (90.1\% Saudi nationals; 39.8\% stage IV)~\citep{durrani2025healthcare};
+receptor percentages recomputed from the published counts.}\label{tab:cohorts}
+\tabfit{\input{generated/tab_cohorts.tex}}
+\end{table}
+
+\begin{figure}[htbp]\centering
+\adjustbox{max width=\linewidth}{\input{figures/fig_grade_pgf.tex}}
+\caption{Distribution of Nottingham grade by cohort (\%), with the published Saudi series below the
+dashed line ($^\dagger$\citealp{kussaibi2021saudi}; $^\ddagger$\citealp{durrani2025healthcare}).}\label{fig:grade}
+\end{figure}
+
+\subsection{Associations between grade and routine variables}
+Of the \NTests{} pre-specified associations, \NSigTests{} remained significant after adjustment for
+multiple testing (Table~\ref{tab:assoc}, Figure~\ref{fig:assoc}). In METABRIC, high grade was most
+strongly linked to ER-negative ($\tau_b$ \TauER) and PR-negative ($\tau_b$ \TauPR) disease, followed
+by HER2 positivity (\TauHER), larger tumours (\TauT), nodal involvement (\TauN) and younger age
+($\rho$ \RhoAge). Histological type showed a moderate association ($V$ = \VHist). All directions were
+the same in MSK-2018. In the multivariable proportional-odds model (\NOrdinal{} complete cases;
+Table~\ref{tab:shap}), ER positivity (odds ratio for higher grade \OrER, 95\% CI \OrERlo--\OrERhi) and
+lobular histology (\OrILC, \OrILClo--\OrILChi) remained the strongest independent factors.
+
+\begin{table}[htbp]\centering\small
+\caption{Scale-appropriate associations with bootstrap 95\% CIs and Benjamini--Hochberg-adjusted
+$p$ values. Binary variables are coded 1 = present/positive, so a negative $\tau_b$ for ER means
+ER-positive tumours tend to be lower grade.}\label{tab:assoc}
+\tabfit{\input{generated/tab_associations.tex}}
+\end{table}
+
+\begin{figure}[htbp]\centering
+\adjustbox{max width=\linewidth}{\input{figures/fig_assoc_pgf.tex}}
+\caption{Associations involving grade in the two large cohorts (effect and bootstrap 95\% CI).}\label{fig:assoc}
+\end{figure}
+
+\subsection{Internal validation: flexible models did not beat regression}
+All learned models performed well above the baseline, and they performed almost identically
+(Table~\ref{tab:internal}, Figure~\ref{fig:ladder}). Multinomial LR (macro-AUC \MlrIntAuc) and the
+proportional-odds model (\OrdIntAuc) matched XGBoost (\XgbIntAuc) and the other ensemble methods.
+The paired difference between XGBoost and LR was \XgbDeltaInt{} (95\% CI \XgbDeltaIntLo{} to
+\XgbDeltaIntHi), and no model exceeded LR by more than \MaxDeltaIntHi{} even at the upper confidence
+limit. $k$-nearest neighbours performed worst (\KnnIntAuc). Results were stable across repeats
+(standard deviation at most \MaxRepSd). Grade~3 was the easiest class to identify (AUC
+\BestIntGThreeAuc{} for \BestIntModel) and grade~2 the hardest. Macro-F1 was \MlrIntFOne{} for LR
+compared with \MajIntFOne{} for the baseline. Multiple imputation changed macro-AUC by at most
+\MIDiffMax{} (Supplementary Table~\ref{tab:mi}), and a complete-case analysis (\NComplete{} patients)
+gave \CCMlrAuc{} for LR. The sample-size criteria were \SSMet: \SSRequired{} patients would be needed,
+against \SSAvailable{} available. The limiting factor was the grade~1 versus grade~2 comparison,
+which carries little predictive signal (Supplementary Table~\ref{tab:ss}).
+
+\begin{table}[htbp]\centering\small
+\caption{Internal validation in METABRIC (nested, \Repeats$\times$ repeated stratified \Folds-fold
+cross-validation; full feature set). Point estimates are means over repeats; 95\% CIs are
+patient-level bootstraps (\Boot{} resamples) of repeat-averaged out-of-fold predictions. $\Delta$ is
+the paired-bootstrap difference in macro-AUC versus multinomial LR. QWK = quadratic-weighted
+$\kappa$.}\label{tab:internal}
+\tabfit{\input{generated/tab_internal.tex}}
+\end{table}
+
+\begin{figure*}[htbp]\centering
+\resizebox{\linewidth}{!}{\input{figures/fig_ladder_pgf.tex}}
+\caption{Macro-averaged AUC (95\% CI) of the model ladder internally and in three external cohorts;
+dashed line = chance.}\label{fig:ladder}
+\end{figure*}
+
+\subsection{External and leave-one-dataset-out validation}
+When applied unchanged to new cohorts with the full feature set, the models reached macro-AUCs of
+\FullMskMin--\FullMskMax{} in MSK-2018 (LR \MlrExtAuc, 95\% CI \MlrMskAucLo--\MlrMskAucHi) and
+\FullDukeMin--\FullDukeMax{} in Duke (LR \MlrDukeAuc, \MlrDukeAucLo--\MlrDukeAucHi; \NDukeExt{}
+patients) (Table~\ref{tab:external}). This is close to the internal estimate, so discrimination
+transported well. With the core feature set, which lacks tumour size and nodal status, MSK-2018
+discrimination fell to \CoreMskMin--\CoreMskMax. The smaller cohorts reached up to \CoreExtAucMax,
+with wide confidence intervals. Leave-one-dataset-out estimates ranged from \LodoAucMin{} to
+\LodoAucMax{} (Supplementary Table~\ref{tab:lodo}). Of \NExtComparisons{} paired external
+comparisons between a flexible model and LR, \NExtSigBetter{} favoured the flexible model and
+\NExtSigWorse{} favoured LR.
+
+\begin{table}[htbp]\centering\small
+\caption{External validation of models developed in METABRIC and applied without refitting.
+Calibration slope is for P(grade 3).}\label{tab:external}
+\tabfit{\input{generated/tab_external.tex}}
+\end{table}
+
+\subsection{Calibration, updating and clinical utility}
+Predictions were well calibrated internally (calibration slope \CalSlopeInt{} for LR and
+\CalSlopeIntXgb{} for XGBoost; Supplementary Table~\ref{tab:cal}). In the external cohorts the slope
+stayed close to one (MSK-2018 \CalSlopeMskRaw; Duke \CalSlopeDukeRaw), which means the predictor
+effects transported. The average level of the predictions did not. In MSK-2018, \PrevMsk{} of
+patients had grade~3 but the mean predicted probability was only \PredMsk{} (calibration intercept
+\CalIntMskRaw), so the model under-predicted grade~3. In Duke the opposite occurred: \PrevDuke{}
+observed against \PredDuke{} predicted (intercept \CalIntDukeRaw). Re-estimating only the intercept
+in each cohort removed this miscalibration without changing discrimination (Figure~\ref{fig:cal};
+per-grade results in Supplementary Table~\ref{tab:oe}). Decision curves showed a net benefit over
+treating all or no patients as grade~3 for threshold probabilities above about \DcaLoInt{}
+internally and \DcaLoExt{} in MSK-2018, where the high prevalence of grade~3 makes ``treat all'' a
+strong alternative, and between \DcaLoDuke{} and \DcaHiDuke{} in Duke.
+
+\begin{figure*}[htbp]\centering
+\adjustbox{max width=\linewidth}{\input{figures/fig_caldca_pgf.tex}}
+\caption{Left: LOWESS calibration curves for P(grade 3) from multinomial LR, internally, externally
+(solid) and after a cross-fitted intercept update (dashed). Right: decision curves (solid = model;
+thin dashed = treat all, same colour; treat none = 0).}\label{fig:cal}
+\end{figure*}
+
+\subsection{Interpretability and clinical plausibility}
+The SHAP analysis ranked \ShapTop{} as the most important feature and \ShapSecond{} as the second
+(Figure~\ref{fig:shap}). \ShapAgree{} pre-specified directions were confirmed, with bootstrap
+intervals excluding zero (Table~\ref{tab:shap}), and all agreed in sign with the proportional-odds
+odds ratios. The model therefore uses the variables in the way a pathologist would expect.
+
+\begin{figure}[htbp]\centering
+\adjustbox{max width=\linewidth}{\input{figures/fig_shap_pgf.tex}}
+\caption{Global importance (mean $|$SHAP$|$) and direction (Spearman $\rho$ between feature value and
+SHAP value, bootstrap 95\% CI) for the grade-3 output of XGBoost in METABRIC. Beeswarm in
+Supplementary Figure~\ref{fig:beeswarm}.}\label{fig:shap}
+\end{figure}
+
+\begin{table}[htbp]\centering\small
+\caption{Clinical-plausibility check. ``Expected'' was pre-specified. Ordinal odds ratios are for
+higher grade from a complete-case proportional-odds model (bootstrap 95\% CI).}\label{tab:shap}
+\tabfit{\input{generated/tab_shap.tex}}
+\end{table}
+
+\subsection{Leakage audit}
+Every shortcut inflated apparent performance (Table~\ref{tab:leak}, Figure~\ref{fig:leak}). Adding the
+Nottingham Prognostic Index raised the macro-AUC of XGBoost from \NpiHonest{} to \NpiLeaky. Adding the
+Nottingham component scores raised LR from \CompHonest{} to \CompLeaky{} in Sanger and from
+\CompHonestDuke{} to \CompLeakyDuke{} in Duke. Imputing and oversampling before splitting raised
+$k$-nearest neighbours from \SmoteHonestKnn{} to \SmoteLeakyKnn. Splitting by record rather than by
+patient had a smaller effect (\RecHonestKnn{} to \RecLeakyKnn{} for 1-nearest neighbour) because few
+MSK-2018 patients had more than one record. The largest inflation, \LeakMaxInfl{} in macro-AUC, is
+larger than the entire gap between the baseline and the best correctly validated model.
+
+\begin{table}[htbp]\centering\small
+\caption{Leakage audit: identical models evaluated with the correct and a leaky protocol (5-fold
+cross-validation).}\label{tab:leak}
+\tabfit{\input{generated/tab_leakage.tex}}
+\end{table}
+
+\begin{figure}[htbp]\centering
+\adjustbox{max width=\linewidth}{\input{figures/fig_leak_pgf.tex}}
+\caption{Apparent macro-AUC under the correct (blue) and leaky (orange) protocols.}\label{fig:leak}
+\end{figure}
+
+\subsection{Imaging extension: MRI radiomics in Duke}
+In the \NDukeRad{} graded Duke patients, the clinical model reached a cross-validated macro-AUC of
+\DukeClinAuc{} (95\% CI \DukeClinAucLo--\DukeClinAucHi). Radiomics alone reached \DukeRadAuc{}
+(\DukeRadAucLo--\DukeRadAucHi), and the combined model \DukeFusAuc{} (\DukeFusAucLo--\DukeFusAucHi)
+(Table~\ref{tab:duke}, Figure~\ref{fig:duke}). Adding radiomics to the clinical variables therefore
+lowered performance, by \DukeFusDelta{} (\DukeFusDeltaLo{} to \DukeFusDeltaHi).
+
+\begin{table}[htbp]\centering\small
+\caption{Duke-Breast-Cancer-MRI: clinical, radiomics and fusion models (nested
+\RadRepeats$\times$\Folds-fold cross-validation; $L_2$-penalised multinomial LR; paired bootstrap
+$\Delta$ versus the clinical model).}\label{tab:duke}
+\tabfit{\input{generated/tab_duke_radiomics.tex}}
+\end{table}
+
+\begin{figure}[htbp]\centering
+\adjustbox{max width=\linewidth}{\input{figures/fig_duke_pgf.tex}}
+\caption{Duke: discrimination of clinical, radiomics and fusion models (95\% CI); dashed = chance.}\label{fig:duke}
+\end{figure}
+
+\subsection{Transport to Saudi case-mix}
+When METABRIC was re-weighted to the Dammam receptor, histology and age profile (effective sample
+size \EssMet{} of \NRakedMet), its grade distribution moved to \RwGOneMet/\RwGTwoMet/\RwGThreeMet\%
+(grade~3 95\% CI \RwGThreeMetLo--\RwGThreeMetHi\%), compared with \ObsGThreeMet\% grade~3 observed
+in METABRIC and 36.7\% published for Dammam (Table~\ref{tab:transport}, Figure~\ref{fig:transport}).
+In other words, the Saudi case-mix predicts \emph{more} grade~3, not less. The same pattern appeared
+for MSK-2018 (\RwGThreeMsk\%) and Duke (\RwGThreeDuke\%), for every assumed share of patients aged
+$\le$50 years from \AgeSensLo\% to \AgeSensHi\% (grade~3 \AgeSensMin--\AgeSensMax\%; Supplementary
+Table~\ref{tab:agesens}), and for the Riyadh series (re-weighted METABRIC grade~3 \RwGThreeMetB\%,
+\RwGThreeMetBLo--\RwGThreeMetBHi\%, against \SaudiGThreeB\% published). Across \PoolK{} Saudi series
+(\PoolN{} patients), the pooled published grade-3 share was \PoolGThree\% (\PoolGThreeLo--\PoolGThreeHi\%);
+including the Najran series~\citep{alamri2024najran} gave \PoolGThreeAll\%
+(\PoolGThreeAllLo--\PoolGThreeAllHi\%). Under the Dammam case-mix, LR discrimination rose from
+\AucUnwMet{} to \AucWMet{}, but the mean predicted probability of grade~3 was \PredGThreeMet\%,
+about \OverPredPP{} percentage points above the published Dammam figure.
+
+\begin{table}[htbp]\centering\small
+\caption{Re-weighting to published Saudi case-mix. ESS = effective sample size of the raking weights
+(first row of each block: patients with complete raking variables). Grade-3 CI: bootstrap with
+re-raking. Arrows: unweighted$\to$Saudi-weighted LR discrimination. $^\dagger$Dammam
+series~\citep{kussaibi2021saudi}; $^\ddagger$Riyadh series~\citep{durrani2025healthcare}
+(tertiary referral centre). Pooled: DerSimonian--Laird random effects across \PoolK{} Saudi
+series reporting grade~\citep{kussaibi2021saudi,durrani2025healthcare,albasri2014madinah}; the
+Madinah series reports grade for invasive ductal carcinoma only and no receptor status, so it
+contributes to the pooled estimate but not to raking.}\label{tab:transport}
+\tabfit{\input{generated/tab_transport.tex}}
+\end{table}
+
+\begin{figure}[htbp]\centering
+\adjustbox{max width=\linewidth}{\input{figures/fig_transport_pgf.tex}}
+\caption{Grade distributions implied by re-weighting the development and external cohorts to each
+Saudi anchor's case-mix, and the published Saudi distributions.}\label{fig:transport}
+\end{figure}
+
+\subsection{Sensitivity analysis}
+In the Ljubljana cohort (\NLj{} patients, grouped covariates and no receptor data), the best
+macro-AUC for ``degree of malignancy'' was \LjBest{} (Supplementary Table~\ref{tab:lj}). This
+confirms that discrimination drops when receptor status is not available.

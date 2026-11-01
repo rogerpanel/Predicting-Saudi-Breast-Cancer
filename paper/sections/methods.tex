@@ -1,0 +1,188 @@
+\section{Methods}\label{sec:methods}
+
+\subsection{Study design and reporting}
+This is a secondary analysis of de-identified, publicly released data. We report the prediction
+analysis according to TRIPOD+AI~\citep{collins2024tripodai} and the descriptive analysis according to
+STROBE~\citep{vonelm2007strobe}; the completed TRIPOD+AI checklist is in Supplementary
+Table~\ref{tab:tripod}. Figure~\ref{fig:framework} shows the study framework in three lanes: data
+preparation (A), model development and validation (B), and the checks that test the results (C).
+Before running any experiment, we fixed the feature sets, models, metrics, expected directions of
+effect and re-weighting targets in a configuration file (random seed \Seed). All tables, figures
+and numbers in this paper are generated directly from the results files by code.
+
+\begin{figure*}[t]\centering
+\resizebox{\linewidth}{!}{\input{figures/fig_framework.tex}}
+\caption{Study framework. \textbf{A}, open data are downloaded with checksums and mapped to one row
+per patient under four harmonisation rules; variables that contain grade are set aside.
+\textbf{B}, associations are measured with statistics suited to each variable type; models are
+developed in METABRIC with nested cross-validation, then frozen and validated in five external
+cohorts and across datasets. \textbf{C}, the results are checked for leakage and clinical
+plausibility, extended with MRI radiomics in the Duke cohort, and transported to published Saudi
+case-mix. E1--E10 are the experiment stages in the code repository.}\label{fig:framework}
+\end{figure*}
+
+\subsection{Data sources}
+All data were downloaded without registration from the cBioPortal data
+hub~\citep{cerami2012cbio,gao2013cbio}, The Cancer Imaging Archive (TCIA) and the UCI Machine Learning
+Repository. A download script records a SHA-256 checksum for every file, so any later change by a data
+custodian can be detected. The cohorts and their roles were:
+\begin{itemize}[leftmargin=*,itemsep=1pt,topsep=2pt]
+\item \textbf{METABRIC} (UK/Canada; development)~\citep{curtis2012metabric,pereira2016metabric}: a
+surgical cohort with Nottingham grade, tumour size in millimetres, number of positive nodes,
+receptor status and menopausal status.
+\item \textbf{MSK-2018} (USA; external validation, full feature set)~\citep{razavi2018msk}: patients
+sequenced at Memorial Sloan Kettering, enriched for advanced hormone-receptor-positive disease, with
+grade, T and N category, receptors and menopausal status at diagnosis.
+\item \textbf{Duke-Breast-Cancer-MRI} (USA; external validation, full feature set; imaging
+extension)~\citep{saha2018duke}: 922 patients with invasive cancer imaged at Duke University
+Hospital between 2000 and 2014, with Nottingham grade and its component scores, receptors, T and N
+category, menopausal status and 529 pre-computed MRI features (CC BY-NC 4.0; obtained from a
+checksummed public copy of the TCIA files).
+\item \textbf{MBCproject} (USA/Canada; external, core features)~\citep{mbcproject2022,jain2023mbcproject}:
+a patient-partnered cohort of metastatic disease with diagnosis-time records abstracted from charts;
+age is given in five-year bands.
+\item \textbf{Sanger} (UK/Europe; external, core features)~\citep{stephens2012sanger}: 100 primary
+tumours with grade and the three Nottingham component scores.
+\item \textbf{Broad} (Mexico and Vietnam; external, core features)~\citep{banerji2012broad}: the only
+open grade-labelled cohort from low- and middle-income countries that we found.
+\item \textbf{BCCRC} (Canada; triple-negative; descriptive only)~\citep{shah2012bccrc} and
+\textbf{TCGA-BRCA} (USA; descriptive only, no structured grade)~\citep{tcga2012brca}.
+\item \textbf{Ljubljana} (Slovenia; sensitivity analysis)~\citep{zwitter1988ljubljana}: \NLj{}
+patients with a ``degree of malignancy'' of 1--3 and grouped covariates.
+\end{itemize}
+We found no openly available, grade-labelled patient-level cohort from Saudi Arabia or the Gulf.
+Saudi data therefore enter the study only as published summary figures
+(Section~\ref{sec:transport}).
+
+\subsection{Harmonisation to a common data model}
+We mapped every source to one row per patient with the following variables: age in years,
+post-menopausal status, ER, PR and HER2 status (positive or negative; equivocal results treated as
+missing), histological type (ductal/no special type, lobular, mixed ductal--lobular, other special
+type), T category (T1 $\le$20\,mm, T2 21--50\,mm, T3 or T4) and nodal status (any positive regional
+node, including micrometastasis, versus none). Four rules prevented common data-handling errors:
+(i) the outcome is invasive Nottingham grade 1--3, and any other value is treated as missing;
+(ii) pure in-situ disease (DCIS, LCIS) and non-carcinomas are excluded, never relabelled as invasive;
+(iii) lobular carcinoma is never merged with ductal carcinoma; and (iv) men are excluded. When a
+patient had several sequenced samples (MSK-2018), we kept the diagnosis-time record once.
+Supplementary Table~\ref{tab:flow} shows the participant flow.
+
+\subsection{Outcome, predictors and feature sets}
+The primary outcome was grade in three classes; the main secondary outcome was grade~3 versus
+grades 1--2. We used two pre-specified feature sets. The \emph{full} set (age, menopausal status,
+ER, PR, HER2, histology, T category and nodal status) was available in METABRIC, MSK-2018 and Duke.
+The \emph{core} set (age, ER, PR, HER2 and histology) was available in all external cohorts.
+Variables that contain grade by construction---the Nottingham Prognostic Index and the three
+Nottingham component scores---and stage were never used as predictors; they appear only in the
+leakage audit. A unit test stops the analysis if any of them enters a feature set.
+
+\subsection{Descriptive and association statistics}
+We matched each association measure to the type of variable: Kendall's $\tau_b$ for grade against
+binary or ordinal variables, bias-corrected Cram\'er's $V$~\citep{bergsma2013cramer} for histological
+type, and Spearman's $\rho$ with the Kruskal--Wallis $\varepsilon^2$ for age. Every estimate has a
+bootstrap 95\% confidence interval (\Boot{} resamples), and $p$ values were adjusted for the
+\NTests{} tests with the Benjamini--Hochberg procedure~\citep{benjamini1995fdr}. These associations
+describe which tumours tend to be high grade; they do not imply causation. A proportional-odds
+(ordinal logistic) model fitted to complete cases in METABRIC summarises the associations jointly.
+
+\subsection{Model development}
+We compared seven models of increasing flexibility: a baseline that predicts the class prevalences,
+multinomial logistic regression (LR) with an $L_2$ penalty, proportional-odds logistic regression,
+$k$-nearest neighbours, random forest, XGBoost~\citep{chen2016xgboost} and
+LightGBM~\citep{ke2017lightgbm}. We also pre-specified a tabular foundation model,
+TabPFN~\citep{hollmann2025tabpfn}, as an optional eighth model (status: \TabpfnStatus; see
+Limitations). Imputation of missing values~\citep{vanbuuren2011mice}, standardisation and the model
+itself were combined in one pipeline, so every step was fitted on training data only. We tuned
+hyper-parameters by grid search, minimising log-loss in an inner \InnerFolds-fold cross-validation.
+We did not rebalance the classes, because resampling distorts predicted
+probabilities~\citep{vandengoorbergh2022imbalance}. Instead, when a single predicted class was
+needed, we chose the class with the largest ratio of predicted probability to training prevalence,
+$\hat y=\arg\max_k p_k/\pi_k$.
+
+\paragraph{Missing data} The primary analysis used single chained-equation imputation fitted within
+each training fold. We ran two pre-specified sensitivity analyses: multiple imputation with
+$m=\MIm$ imputed datasets, a separate model for each and the average of their predicted
+probabilities~\citep{sisk2023imputation,hoogland2020missing}; and a complete-case analysis. Both
+used the same resampling design as the primary analysis.
+
+\paragraph{Sample size} We calculated the minimum development sample size with the criteria of Riley
+et al.~\citep{riley2020samplesize}, applied to each pair of grades as recommended for multinomial
+models~\citep{pate2023multinomial}. The criteria require a shrinkage factor of at least 0.9, a small
+difference between apparent and adjusted $R^2$ ($\delta$=0.05) for every pairwise sub-model with
+\SSParams{} predictor parameters, and precise estimation of each grade's prevalence ($\pm$0.05). The
+expected pairwise $R^2$ values came from out-of-fold LR predictions, which are not optimistic.
+
+\subsection{Validation}
+Internal validation used nested, stratified \Folds-fold cross-validation in METABRIC, repeated
+\Repeats{} times. We averaged each patient's out-of-fold predictions across repeats and computed
+bootstrap 95\% confidence intervals (\Boot{} resamples) on these averages. Each model was compared
+with LR by a paired bootstrap of the difference in macro-AUC, using the same resamples for both
+models. For external validation, each model was tuned on all of METABRIC, frozen, and applied
+unchanged to MSK-2018 and Duke (full set) and to MSK-2018, Duke, MBCproject, Sanger and Broad (core
+set). We also used leave-one-dataset-out validation: models were trained on all but one of METABRIC,
+MSK-2018, Duke, MBCproject and Sanger and tested on the remaining
+cohort~\citep{steyerberg2016validation}.
+
+\subsection{Performance measures}
+We measured discrimination with the macro-averaged one-versus-rest AUC and the AUC for each grade;
+classification with macro-F1, balanced accuracy and quadratic-weighted $\kappa$ (QWK); and the overall
+accuracy of the predicted probabilities with the multiclass Brier score. For grade~3 versus 1--2 we
+also report the calibration intercept (whether predictions are too high or too low on average), the
+calibration slope (whether they are too extreme or too modest), smoothed calibration
+curves~\citep{vancalster2019calibration} and decision curves~\citep{vickers2006dca}. For all three
+grades we compare the observed and mean predicted prevalence~\citep{vanhoorde2014multinomial}. In
+each external cohort we tested a simple model update: re-estimating only the intercept, cross-fitted
+over two halves of the cohort. This separates miscalibration caused by a different grade prevalence
+from miscalibration of the predictor effects~\citep{riley2024evalpart2}.
+
+\subsection{Leakage audit}
+We compared the correct protocol with four common shortcuts on the same patients and
+models~\citep{kapoor2023leakage}: (a) adding the Nottingham Prognostic Index, which includes grade,
+as a predictor; (b) imputing and oversampling with SMOTE~\citep{chawla2002smote} on the whole dataset
+before cross-validation; (c) adding the Nottingham component scores as predictors (Sanger and Duke);
+and (d) splitting by record instead of by patient when some patients have several records
+(MSK-2018). The last shortcut is the tabular version of splitting image tiles rather than patients in
+digital pathology~\citep{bussola2019slipping}.
+
+\subsection{Interpretability and clinical plausibility}
+We computed TreeSHAP values for the grade-3 output of XGBoost~\citep{lundberg2017shap,lundberg2020tree}.
+Before the analysis we wrote down the expected direction of effect for seven features: ER-negative,
+PR-negative, HER2-positive, larger tumours, node-positive disease, younger age and non-lobular
+histology should all be associated with higher grade. A direction was counted as confirmed when the
+bootstrap interval of the Spearman correlation between a feature's value and its SHAP value excluded
+zero in the expected direction.
+
+\subsection{Imaging extension: MRI radiomics in Duke}
+In the graded Duke patients we compared three penalised multinomial LR models using nested
+cross-validation (\Repeats{} repeats of \Folds{} folds): the clinical full set, the 529 pre-computed
+dynamic contrast-enhanced MRI features~\citep{saha2018duke}, and both combined. The penalty was tuned
+in an inner 3-fold loop. The value added by radiomics was the paired-bootstrap difference in
+macro-AUC compared with the clinical model.
+
+\subsection{Transport to Saudi case-mix}\label{sec:transport}
+Without Saudi patient data, we asked a narrower question: what grade distribution, and what model
+predictions, would the Western cohorts show if their patients had the receptor, histology and age
+profile reported for Saudi patients? We re-weighted the METABRIC, MSK-2018 and Duke patients by
+iterative proportional fitting (raking) so that their weighted profile matched published Saudi
+figures~\citep{steingrimsson2023transport}. The primary target was a series of Saudi nationals
+treated at King Fahd University Hospital, Dammam~\citep{kussaibi2021saudi}, which reports ER, PR,
+HER2 and histology. Because it reports only the median age (51 years), we assumed that 50\% of
+patients were aged $\le$50 years and varied this from \AgeSensLo\% to \AgeSensHi\% in a sensitivity
+analysis. The second target was a tertiary-centre series from King Fahad Medical City,
+Riyadh~\citep{durrani2025healthcare}, which reports ER, PR, HER2, histology and the share aged
+$\le$50 years; we recalculated its receptor percentages from the published counts. Every value was
+transcribed from the published tables, with table and page numbers recorded in the repository.
+For each target and cohort we report the re-weighted grade distribution with a bootstrap 95\%
+confidence interval (\TransportBoot{} resamples, each re-weighted afresh), the effective sample size
+of the weights, and the weighted mean predicted probabilities. We pooled the published Saudi grade-3
+proportions with a DerSimonian--Laird random-effects model on the logit scale, using every series that
+reports grade for invasive cancer only~\citep{kussaibi2021saudi,durrani2025healthcare,albasri2014madinah};
+a sensitivity analysis also included a small series that grades all lesions~\citep{alamri2024najran}.
+This analysis shows how much of the difference in grade can be explained by measured case-mix; it
+cannot capture local grading practice or unmeasured differences.
+
+\subsection{Software and reproducibility}
+We used Python 3.13 with scikit-learn 1.9.1, imbalanced-learn 0.14.2, XGBoost 3.4.1, LightGBM 4.7.0,
+SHAP 0.54.1 and statsmodels 0.15.0 (versions are pinned in the repository). A single command
+(\texttt{make all}) downloads and checks the data, runs the unit tests that enforce the harmonisation
+and leakage rules, runs experiments E1--E10 and regenerates every table, figure and number in the
+paper.

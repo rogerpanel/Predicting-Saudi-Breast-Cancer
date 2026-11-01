@@ -1,0 +1,9 @@
+label;y;honest;leaky
+NPI as predictor -- Multinomial LR;7;0.72646;0.94936
+NPI as predictor -- XGBoost;6;0.72055;0.97197
+SMOTE/impute before split -- k-NN;5;0.65177;0.80617
+SMOTE/impute before split -- XGBoost;4;0.66863;0.85005
+Grade components -- Multinomial LR;3;0.69637;0.96212
+Grade components -- Multinomial LR;2;0.69813;0.99478
+Record-level split -- k-NN;1;0.54425;0.57925
+Record-level split -- Random forest;0;0.62073;0.65341

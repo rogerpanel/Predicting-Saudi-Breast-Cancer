@@ -1,0 +1,61 @@
+% Full TRIPOD+AI checklist (Collins et al., BMJ 2024; 27 main-text items). D = development, E = evaluation.
+\begin{longtable}{p{0.6cm}p{3.0cm}p{0.8cm}p{7.5cm}}
+\caption{TRIPOD+AI checklist: where each item is reported.}\label{tab:tripod}\\
+\toprule
+Item & Topic & D/E & Location in this paper \\
+\midrule\endfirsthead
+\toprule Item & Topic & D/E & Location \\ \midrule\endhead
+\bottomrule\endfoot
+1 & Title & D;E & Title: prediction of grade, development and external validation, open data \\
+2 & Abstract & D;E & Structured abstract (TRIPOD+AI for Abstracts items) \\
+3a & Background: healthcare context & D;E & Introduction, paragraphs 1 and 3 \\
+3b & Background: target population and intended use & D;E & Introduction, paragraph 1 (baseline for image models, registry imputation, quality assurance); Discussion, \emph{Implications} \\
+3c & Background: known biases/inequalities & D;E & Introduction, paragraph 3 (Saudi/Gulf case-mix, absence of open regional data) \\
+4 & Objectives & D;E & Introduction, \emph{Contributions} \\
+5a & Data sources & D;E & Methods, \emph{Data sources}; Table~\ref{tab:cohorts} \\
+5b & Dates of data collection & D;E & Methods, \emph{Data sources}; Supplementary Table~\ref{tab:flow}; Data availability (download date and checksums) \\
+6a & Setting and centres & D;E & Methods, \emph{Data sources} \\
+6b & Eligibility criteria & D;E & Methods, \emph{Harmonisation} (rules i--iv) \\
+6c & Treatments received & D;E & Not applicable at diagnosis (grade is a baseline characteristic); Limitations \\
+7 & Data preparation & D;E & Methods, \emph{Harmonisation}; repository \texttt{harmonise.py} \\
+8a & Outcome definition & D;E & Methods, \emph{Outcome}: invasive Nottingham grade 1--3; grade 3 vs 1--2 \\
+8b & Outcome assessment & D;E & Assigned by pathologists at each source; differences discussed under Limitations \\
+8c & Blinding of outcome assessment & D;E & Not applicable (retrospective records); Limitations \\
+9a & Choice of predictors & D & Methods, \emph{Outcome, predictors and feature sets} \\
+9b & Predictor definitions & D;E & Methods, \emph{Harmonisation}; repository code \\
+9c & Blinding of predictor assessment & D;E & Not applicable (routine records); leakage quarantine \\
+10 & Sample size & D;E & Methods, \emph{Sample size}; Supplementary Table~\ref{tab:ss} \\
+11 & Missing data & D;E & Methods, \emph{Missing data}; Supplementary Table~\ref{tab:mi} \\
+12a & Data use (development/evaluation) & D;E & Methods, \emph{Validation}; Figure~\ref{fig:framework} \\
+12b & Pre-processing & D & Methods, \emph{Model development} (in-fold imputation and scaling) \\
+12c & Model type and building & D & Methods, \emph{Model development} \\
+12d & Heterogeneity across clusters & D;E & LODO validation; cohort-level results (Tables~\ref{tab:external}, \ref{tab:lodo}) \\
+12e & Performance measures & D;E & Methods, \emph{Performance measures} \\
+12f & Model updating & E & Methods, \emph{Performance measures} (intercept update) \\
+12g & Comparison with other models & D;E & Model ladder; paired $\Delta$ vs LR (Table~\ref{tab:internal}) \\
+13 & Class imbalance & D;E & Methods, \emph{Model development} (no resampling; prevalence-adjusted rule) \\
+14 & Fairness & D;E & Results by country/cohort; Saudi transport (Section~\ref{sec:transport}) \\
+15 & Model output & D & Probabilities for each grade \\
+16 & Training versus evaluation differences & D;E & Methods, \emph{Validation}; frozen external models \\
+17 & Ethical approval & D;E & Declarations \\
+18a & Funding & D;E & Declarations \\
+18b & Conflicts of interest & D;E & Declarations \\
+18c & Protocol & D;E & Pre-specified analysis plan in \texttt{configs/experiment.yaml} (repository) \\
+18d & Registration & D;E & Not registered (secondary analysis of open data); Declarations \\
+18e & Data sharing & D;E & Data availability \\
+18f & Code sharing & D;E & Code availability \\
+19 & Patient and public involvement & D;E & Declarations \\
+20a & Participant flow & D;E & Supplementary Table~\ref{tab:flow} \\
+20b & Participant characteristics & D;E & Table~\ref{tab:cohorts}; Figure~\ref{fig:grade} \\
+20c & Comparison of development and evaluation data & E & Table~\ref{tab:cohorts}; Results, \emph{Cohorts} \\
+21 & Number of participants and outcome events & D;E & Tables~\ref{tab:cohorts}, \ref{tab:internal}, \ref{tab:external} \\
+22 & Full model specification & D & Code and fitted coefficients in the repository; ordinal odds ratios (Table~\ref{tab:shap}) \\
+23a & Performance with CIs & D;E & Tables~\ref{tab:internal}, \ref{tab:external}; Figure~\ref{fig:ladder} \\
+23b & Performance in subgroups & D;E & By cohort/country; Saudi-weighted performance (Table~\ref{tab:transport}) \\
+24 & Model updating results & E & Figure~\ref{fig:cal}; Supplementary Table~\ref{tab:cal} \\
+25 & Interpretation & D;E & Discussion, \emph{Principal findings} \\
+26 & Limitations & D;E & Discussion, \emph{Strengths and limitations} \\
+27a & Usability: handling poor-quality or missing input & D & Methods, \emph{Missing data}; Discussion \\
+27b & Usability: user interaction and expertise & D & Discussion, \emph{Implications} \\
+27c & Next steps and generalisability & D;E & Discussion, \emph{Implications and next steps} \\
+\end{longtable}

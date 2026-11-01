@@ -1,0 +1,15 @@
+\pgfplotstableread{\gdata{transport}}\tbltr
+\begin{tikzpicture}
+\begin{axis}[bcbase, xbar stacked, width=0.9\linewidth, height=6.4cm, bar width=8pt, xmin=0, xmax=100,
+  xlabel={Patients (\%)}, xmajorgrids, ytick=data, yticklabels from table={\tbltr}{label},
+  enlarge y limits=0.07, legend columns=3, legend style={at={(0.5,1.02)}, anchor=south},
+  nodes near coords={\pgfmathprintnumber[fixed,precision=0]{\pgfplotspointmeta}},
+  nodes near coords style={font=\sffamily\tiny, text=white}, point meta=explicit,
+  every node near coord/.append style={anchor=center}]
+\addplot[fill=gI, draw=white] table[x=g1, y=y, meta=g1] {\tbltr};
+\addplot[fill=gII, draw=white] table[x=g2, y=y, meta=g2] {\tbltr};
+\addplot[fill=gIII, draw=white] table[x=g3, y=y, meta=g3] {\tbltr};
+\legend{Grade 1, Grade 2, Grade 3}
+\draw[inkb, dashed] (axis cs:0,3.5) -- (axis cs:100,3.5);
+\end{axis}
+\end{tikzpicture}
