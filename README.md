@@ -5,7 +5,7 @@
 
 Anyone can re-run everything from public data: **no ethics approval, data-use agreement or account is
 needed**. Every table, figure and in-text number in the manuscript is generated from `results/` by
-`experiments/report.py`; nothing is typed by hand.
+`experiments/report.py`.
 
 ## Quick start
 
